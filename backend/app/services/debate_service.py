@@ -9,7 +9,7 @@ from typing import Dict, Any
 import json
 
 from database.models import User, DebateSession, Turn, Fallacy, Achievement
-from graph_builder import create_debate_workflow
+from graph.graph_builder import create_debate_workflow
 
 from datetime import datetime
 

@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
 from config.database import get_db
-from api.models import (
+from backend.app.api.schemas import (
     StartDebateRequest, StartDebateResponse,
     SendMessageRequest, DebateMessageResponse,
     EndDebateRequest

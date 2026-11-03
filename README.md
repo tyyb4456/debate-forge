@@ -266,6 +266,5 @@ uvicorn main:app --host 0.0.0.0 --port 8000 --workers 4
 ```bash
 cd debate-ui
 npm run build
-# Output will be in debate-ui/dist/
 ```
 

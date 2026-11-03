@@ -1,0 +1,14 @@
+fastapi
+uvicorn
+pydantic
+pydantic-settings
+python-dotenv
+sqlalchemy
+asyncpg
+
+langchain
+langchain-core
+langgraph
+langchain-google-genai
+
+tavily-python

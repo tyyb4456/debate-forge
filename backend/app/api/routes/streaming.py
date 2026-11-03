@@ -10,7 +10,7 @@ import logging
 from typing import AsyncGenerator, Dict, Any
 from datetime import datetime
 
-from graph_builder import create_debate_workflow
+from graph.graph_builder import create_debate_workflow
 from database.models import DebateSession, Turn
 from config.database import get_db
 
