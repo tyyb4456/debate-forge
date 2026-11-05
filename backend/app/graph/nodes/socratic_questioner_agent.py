@@ -8,10 +8,10 @@ from langchain.chat_models import init_chat_model
 from langchain_core.prompts import ChatPromptTemplate
 from pydantic import BaseModel, Field
 import re
-from state import DebateState
+from app.graph.state import DebateState
 from dotenv import load_dotenv
 load_dotenv()
-from models.agent_models import TeachingMoment, SocraticOutput, Question, FollowUpStrategy
+from app.graph.models import TeachingMoment, SocraticOutput, Question, FollowUpStrategy
 
 # ============================================================================
 # SYSTEM PROMPT
@@ -263,7 +263,9 @@ def generate_socratic_questions(
     """Generate structured questions using LLM"""
     
     # Create structured LLM
-    model = init_chat_model("gemini-2.5-flash-lite", model_provider="google_genai", temperature=0.7)
+    from app.graph.llm import build_xkiro_llm
+
+    model = build_xkiro_llm()
     structured_llm = model.with_structured_output(SocraticOutput)
     
     # Prepare summaries for context

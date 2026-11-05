@@ -5,6 +5,7 @@ pydantic-settings
 python-dotenv
 sqlalchemy
 asyncpg
+sse-starlette
 
 langchain
 langchain-core
@@ -12,3 +13,5 @@ langgraph
 langchain-google-genai
 
 tavily-python
+
+langchain-openai

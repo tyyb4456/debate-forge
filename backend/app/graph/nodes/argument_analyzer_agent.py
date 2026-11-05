@@ -10,8 +10,8 @@ from pydantic import BaseModel, Field
 import re
 from dotenv import load_dotenv
 load_dotenv()
-from state import DebateState
-from models.agent_models import AnalyzerOutput, Claim, Evidence, ReasoningChain, ArgumentStrength, Patterns, Fallacy, Assumption
+from app.graph.state import DebateState
+from app.graph.models import AnalyzerOutput, Claim, Evidence, ReasoningChain, ArgumentStrength, Patterns, Fallacy, Assumption
 
 
 
@@ -264,7 +264,9 @@ def analyze_argument(
     Analyze user's argument with structured output
     """
     # Create structured LLM
-    model = init_chat_model("gemini-2.5-flash-lite", model_provider="google_genai", temperature=0.7)
+    from app.graph.llm import build_xkiro_llm
+
+    model = build_xkiro_llm()
     structured_llm = model.with_structured_output(AnalyzerOutput)
     
     # Format conversation history

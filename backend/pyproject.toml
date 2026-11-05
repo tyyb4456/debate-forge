@@ -8,11 +8,13 @@ dependencies = [
     "langchain>=1.4.8",
     "langchain-core>=1.7.4",
     "langchain-google-genai>=4.4.2",
+    "langchain-openai>=1.7.3",
     "langgraph>=1.2.19",
     "pydantic>=2.14.2",
     "pydantic-settings>=2.16.2",
     "python-dotenv>=1.2.4",
     "sqlalchemy>=2.1.6",
+    "sse-starlette>=3.0.0",
     "tavily-python>=0.8.5",
     "uvicorn>=0.54.0",
 ]

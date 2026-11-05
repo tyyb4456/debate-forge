@@ -10,13 +10,13 @@ from langchain_core.tools import tool
 from datetime import datetime
 import re
 from urllib.parse import urlparse
-from state import DebateState
+from app.graph.state import DebateState
 from dotenv import load_dotenv
 from tavily import TavilyClient
 import os
 
 load_dotenv()
-from models.agent_models import ResearchOutput, SearchQuery, CategorizedEvidence, EvidenceItem, DetailedEvidence
+from app.graph.models import ResearchOutput, SearchQuery, CategorizedEvidence, EvidenceItem, DetailedEvidence
 
 
 # ============================================================================
@@ -478,7 +478,9 @@ def research_agent_node(state: DebateState):
     FIXED: Main research node with proper error handling
     """
     
-    model = init_chat_model("gemini-2.5-flash", model_provider="google_genai", temperature=0.7)
+    from app.graph.llm import build_xkiro_llm
+
+    model = build_xkiro_llm()
     
     # Extract research parameters
     claim = state.get('user_input') or state.get('user_claim', '')

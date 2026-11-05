@@ -6,14 +6,14 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
-from config.database import get_db
-from backend.app.api.schemas import (
+from app.config.database import get_db
+from app.api.schemas import (
     StartDebateRequest, StartDebateResponse,
     SendMessageRequest, DebateMessageResponse,
     EndDebateRequest
 )
-from services.debate_service import debate_service
-from database.models import DebateSession
+from app.services.debate_service import debate_service
+from app.database.models import DebateSession
 
 router = APIRouter()
 

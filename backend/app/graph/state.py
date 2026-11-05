@@ -1,6 +1,6 @@
 from typing import TypedDict, List, Dict, Literal, Annotated
 from operator import add
-from models import GrowthTrackerOutput, DevilsAdvocateOutput, SocraticOutput, AnalyzerOutput, ResearchOutput
+from app.graph.models import GrowthTrackerOutput, DevilsAdvocateOutput, SocraticOutput, AnalyzerOutput, ResearchOutput
 
 def merge_dicts(left: Dict, right: Dict) -> Dict:
     """Merge dicts with special clear behavior"""

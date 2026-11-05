@@ -10,8 +10,8 @@ from pydantic import BaseModel, Field
 import re
 from dotenv import load_dotenv
 load_dotenv()
-from state import DebateState
-from models.agent_models import CounterArgument, EvidenceSource, OpposingPosition, Concession, DevilsAdvocateOutput
+from app.graph.state import DebateState
+from app.graph.models import CounterArgument, EvidenceSource, OpposingPosition, Concession, DevilsAdvocateOutput
 
 
 # ============================================================================
@@ -335,7 +335,9 @@ def generate_counter_arguments(
     """Generate structured counter-arguments using LLM"""
     
     # Create structured LLM
-    model = init_chat_model("gemini-2.5-flash-lite", model_provider="google_genai", temperature=0.7)
+    from app.graph.llm import build_xkiro_llm
+
+    model = build_xkiro_llm()
     structured_llm = model.with_structured_output(DevilsAdvocateOutput)
     
     # Prepare evidence summaries

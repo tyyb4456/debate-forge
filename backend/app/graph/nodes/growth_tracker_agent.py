@@ -11,8 +11,8 @@ from datetime import datetime
 from dotenv import load_dotenv
 load_dotenv()
 import statistics
-from state import DebateState
-from models.agent_models import PerformanceBreakdown, PatternsDetected, RecurringFallacy, HistoricalComparison, Achievement, SkillProgression, FallacyReduction, Recommendations, GrowthTrackerOutput, ImprovementArea, SessionSummary
+from app.graph.state import DebateState
+from app.graph.models import PerformanceBreakdown, PatternsDetected, RecurringFallacy, HistoricalComparison, Achievement, SkillProgression, FallacyReduction, Recommendations, GrowthTrackerOutput, ImprovementArea, SessionSummary
 
 
 
@@ -411,7 +411,9 @@ def generate_growth_feedback(
     achievements = check_achievements(state, user_history)
     
     # Create structured LLM
-    model = init_chat_model("gemini-2.5-flash-lite", model_provider="google_genai", temperature=0.7)
+    from app.graph.llm import build_xkiro_llm
+
+    model = build_xkiro_llm()
     structured_llm = model.with_structured_output(GrowthTrackerOutput)
     
     # Prepare context summaries

@@ -7,7 +7,7 @@ from typing import List, Dict, Literal
 from langchain.chat_models import init_chat_model
 from langchain_core.prompts import ChatPromptTemplate
 from pydantic import BaseModel, Field
-from state import DebateState
+from app.graph.state import DebateState
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -451,7 +451,9 @@ def moderator_node(state: DebateState):
     """
     
     # Initialize LLM
-    model = init_chat_model("gemini-2.5-flash-lite", model_provider="google_genai", temperature=0.7)
+    from app.graph.llm import build_xkiro_llm
+
+    model = build_xkiro_llm()
     
     # Check if we're synthesizing or routing
     if state.get("agent_outputs") and len(state["agent_outputs"]) > 0:

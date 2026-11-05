@@ -8,10 +8,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 import logging
 
-from config.settings import settings
-from config.database import engine, Base
-from api.routes import debate, streaming, history, health
-from utils.logger import setup_logging
+from app.config.settings import settings
+from app.config.database import engine, Base
+from app.api.routes import debate, streaming, history, health
+from app.utils.logger import setup_logging
 
 # Setup logging
 setup_logging()

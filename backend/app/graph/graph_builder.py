@@ -7,13 +7,13 @@ from typing import TypedDict, List, Optional, Any, Dict, Iterator
 from langgraph.graph import StateGraph, END
 from langgraph.checkpoint.memory import MemorySaver
 from uuid import uuid4
-from state import DebateState
-from nodes.moderator_agent import moderator_node
-from nodes.research_agent import research_agent_node
-from nodes.growth_tracker_agent import growth_tracker_node
-from nodes.argument_analyzer_agent import argument_analyzer_node
-from nodes.socratic_questioner_agent import socratic_questioner_node
-from nodes.devils_advocate_agent import devils_advocate_node
+from app.graph.state import DebateState
+from app.graph.nodes.moderator_agent import moderator_node
+from app.graph.nodes.research_agent import research_agent_node
+from app.graph.nodes.growth_tracker_agent import growth_tracker_node
+from app.graph.nodes.argument_analyzer_agent import argument_analyzer_node
+from app.graph.nodes.socratic_questioner_agent import socratic_questioner_node
+from app.graph.nodes.devils_advocate_agent import devils_advocate_node
 
 
 # ============================================================================

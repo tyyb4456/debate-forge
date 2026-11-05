@@ -10,9 +10,9 @@ import logging
 from typing import AsyncGenerator, Dict, Any
 from datetime import datetime
 
-from graph.graph_builder import create_debate_workflow
-from database.models import DebateSession, Turn
-from config.database import get_db
+from app.graph.graph_builder import create_debate_workflow
+from app.database.models import DebateSession, Turn
+from app.config.database import get_db
 
 router = APIRouter()
 logger = logging.getLogger(__name__)

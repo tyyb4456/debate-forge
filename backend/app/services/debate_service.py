@@ -8,8 +8,8 @@ from sqlalchemy import select, func   # ← func added here
 from typing import Dict, Any
 import json
 
-from database.models import User, DebateSession, Turn, Fallacy, Achievement
-from graph.graph_builder import create_debate_workflow
+from app.database.models import User, DebateSession, Turn, Fallacy, Achievement
+from app.graph.graph_builder import create_debate_workflow
 
 from datetime import datetime
 
