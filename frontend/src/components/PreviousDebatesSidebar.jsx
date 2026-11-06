@@ -4,11 +4,10 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, MessageSquare, Sparkles } from 'lucide-react';
 
-const PRIMARY = 'var(--clay-primary)';
-const INK = 'var(--clay-ink)';
-const INK_SOFT = 'var(--clay-ink-soft)';
-const MUTED = 'var(--clay-muted)';
 const DUMMY_USER_ID = '8f3c2e7b-6b4a-4c9a-9e6f-2d5c1a8f7e42';
+
+const KICKER =
+  'text-[11px] font-semibold uppercase leading-tight tracking-[0.18em] text-ap-muted';
 
 function PreviousDebatesSidebar({ isOpen, onClose, onSelectDebate }) {
   const [debates, setDebates] = useState([]);
@@ -23,7 +22,9 @@ function PreviousDebatesSidebar({ isOpen, onClose, onSelectDebate }) {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(`http://127.0.0.1:8000/api/user/${DUMMY_USER_ID}/history?limit=20`);
+      const response = await fetch(
+        `http://127.0.0.1:8000/api/user/${DUMMY_USER_ID}/history?limit=20`
+      );
       if (!response.ok) throw new Error('Failed to fetch');
       const data = await response.json();
       setDebates(data.debates || []);
@@ -61,11 +62,11 @@ function PreviousDebatesSidebar({ isOpen, onClose, onSelectDebate }) {
   };
 
   const getStatusColor = (ended_at, performance) => {
-    if (!ended_at) return 'var(--clay-mint)';
-    if (performance === 'excellent') return 'var(--clay-mint)';
-    if (performance === 'good') return 'var(--clay-blue)';
-    if (performance === 'fair') return 'var(--clay-gold)';
-    return MUTED;
+    if (!ended_at) return 'var(--color-ap-mint)';
+    if (performance === 'excellent') return 'var(--color-ap-mint)';
+    if (performance === 'good') return 'var(--color-ap-blue)';
+    if (performance === 'fair') return 'var(--color-ap-gold)';
+    return 'var(--color-ap-muted)';
   };
 
   const getStatusText = (ended_at, performance) => {
@@ -83,8 +84,7 @@ function PreviousDebatesSidebar({ isOpen, onClose, onSelectDebate }) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 z-40"
-            style={{ backgroundColor: 'rgba(11,17,32,0.5)', backdropFilter: 'blur(6px)' }}
+            className="fixed inset-0 z-[70] bg-black/50 backdrop-blur-[5px]"
           />
 
           <motion.div
@@ -92,113 +92,107 @@ function PreviousDebatesSidebar({ isOpen, onClose, onSelectDebate }) {
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 30, stiffness: 240 }}
-            className="fixed right-0 top-0 h-full w-full max-w-md z-50 flex flex-col overflow-hidden clay-bg"
+            className="fixed right-0 top-0 z-[80] flex h-full w-full max-w-[420px] flex-col overflow-hidden border-l border-ap-line bg-ap-bg font-sans text-ap-ink max-[480px]:max-w-full"
           >
             {/* Header */}
-            <div className="shrink-0 p-4 pb-2">
-              <div className="clay-card-primary px-5 py-4 flex items-center justify-between">
-                <div>
-                  <h2 className="font-display text-2xl leading-none" style={{ color: 'var(--clay-on-primary)' }}>History</h2>
-                  <p className="text-[11px] mt-1.5" style={{ color: 'var(--clay-on-primary)', opacity: 0.65 }}>
-                    {debates.length} session{debates.length !== 1 ? 's' : ''}
-                  </p>
-                </div>
-                <motion.button
-                  whileHover={{ scale: 1.08, rotate: 90 }}
-                  whileTap={{ scale: 0.9 }}
-                  onClick={onClose}
-                  className="w-10 h-10 rounded-2xl flex items-center justify-center"
-                  style={{
-                    backgroundColor: 'color-mix(in srgb, var(--clay-on-primary) 16%, transparent)',
-                    color: 'var(--clay-on-primary)',
-                    border: '1px solid color-mix(in srgb, var(--clay-on-primary) 20%, transparent)',
-                  }}
-                >
-                  <X size={18} />
-                </motion.button>
+            <div className="flex shrink-0 items-start justify-between gap-4 border-b border-ap-line px-5 pb-[18px] pt-[22px]">
+              <div>
+                <span className={KICKER}>Your history</span>
+                <h2 className="mt-2 text-2xl font-bold leading-none tracking-[-0.035em]">
+                  Previous debates
+                </h2>
+                <p className="mt-1.5 text-[11px] text-ap-muted">
+                  {debates.length} session{debates.length !== 1 ? 's' : ''}
+                </p>
               </div>
+              <button
+                type="button"
+                onClick={onClose}
+                aria-label="Close history"
+                className="mt-0.5 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-ap-sm border border-ap-line bg-transparent text-ap-ink transition-colors hover:border-ap-line-strong hover:bg-ap-ink/5"
+              >
+                <X size={18} />
+              </button>
             </div>
 
             {/* Content */}
-            <div className="flex-1 overflow-y-auto p-4">
+            <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-6 pt-4">
               {loading ? (
-                <div className="flex flex-col items-center justify-center h-full gap-4">
-                  <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}
-                    className="w-10 h-10 rounded-full border-4"
-                    style={{ borderColor: 'var(--clay-bg-deep)', borderTopColor: PRIMARY }}
-                  />
-                  <p className="text-sm" style={{ color: INK_SOFT }}>Loading debates…</p>
+                <div className="flex h-full flex-col items-center justify-center gap-3 text-sm text-ap-muted">
+                  <span className="h-[34px] w-[34px] animate-spin rounded-full border-2 border-ap-line border-t-ap-ink" />
+                  <p>Loading debates…</p>
                 </div>
               ) : error ? (
-                <div className="flex flex-col items-center justify-center h-full gap-4">
-                  <p className="text-sm" style={{ color: 'var(--clay-danger)' }}>{error}</p>
-                  <motion.button whileHover={{ y: -2 }} whileTap={{ scale: 0.97 }} onClick={fetchDebates} className="clay-btn px-5 py-2.5 text-sm font-semibold">
+                <div className="flex h-full flex-col items-center justify-center gap-3 text-center">
+                  <p className="text-sm text-ap-danger">{error}</p>
+                  <button
+                    type="button"
+                    onClick={fetchDebates}
+                    className="inline-flex h-[38px] items-center justify-center gap-2 rounded-ap border border-transparent bg-ap-accent px-4 text-sm font-semibold text-ap-accent-ink transition hover:bg-ap-accent/85"
+                  >
                     Retry
-                  </motion.button>
+                  </button>
                 </div>
               ) : debates.length === 0 ? (
-                <div className="flex flex-col items-center justify-center h-full gap-3">
-                  <div className="clay-avatar w-16 h-16">
+                <div className="flex h-full flex-col items-center justify-center gap-2.5 text-center">
+                  <div className="mb-1 inline-flex h-12 w-12 items-center justify-center rounded-ap-sm border border-ap-line bg-ap-surface-2 text-ap-muted">
                     <MessageSquare size={24} />
                   </div>
-                  <p className="text-sm font-semibold" style={{ color: INK }}>No debates yet</p>
-                  <p className="text-xs text-center max-w-[220px]" style={{ color: MUTED }}>
+                  <p className="text-[15px] font-semibold text-ap-ink">No debates yet</p>
+                  <p className="max-w-[28ch] text-sm leading-relaxed text-ap-muted">
                     Start your first debate to see your history here
                   </p>
                 </div>
               ) : (
-                <div className="space-y-3">
-                  {debates.map((debate, index) => (
-                    <motion.div
-                      key={debate.session_id}
-                      initial={{ opacity: 0, y: 12 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.05 }}
-                      className="clay-card-sm p-4 cursor-pointer group transition-all hover:-translate-y-0.5"
-                      onClick={() => handleResumeDebate(debate)}
-                    >
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center gap-2">
-                          <div
-                            className="w-2 h-2 rounded-full"
-                            style={{
-                              backgroundColor: getStatusColor(debate.ended_at, debate.performance),
-                              boxShadow: `0 0 0 4px color-mix(in srgb, ${getStatusColor(debate.ended_at, debate.performance)} 18%, transparent)`,
-                            }}
-                          />
-                          <span className="text-[11px] font-semibold" style={{ color: INK_SOFT }}>
+                <div className="flex flex-col gap-2">
+                  {debates.map((debate, index) => {
+                    const statusColor = getStatusColor(
+                      debate.ended_at,
+                      debate.performance
+                    );
+                    return (
+                      <motion.div
+                        key={debate.session_id}
+                        initial={{ opacity: 0, y: 12 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.05 }}
+                        className="group cursor-pointer rounded-ap border border-ap-line bg-ap-surface p-3.5 transition hover:-translate-y-px hover:border-ap-line-strong"
+                        onClick={() => handleResumeDebate(debate)}
+                      >
+                        <div className="flex items-center justify-between gap-2.5">
+                          <span
+                            className="inline-flex items-center gap-1.5 text-[11px] font-semibold"
+                            style={{ color: statusColor }}
+                          >
+                            <span className="h-1.5 w-1.5 rounded-full bg-current" />
                             {getStatusText(debate.ended_at, debate.performance)}
                           </span>
-                        </div>
-                        <span className="text-[11px]" style={{ color: MUTED }}>
-                          {formatDate(debate.started_at)}
-                        </span>
-                      </div>
-
-                      <p className="font-semibold text-sm mb-2.5 line-clamp-2" style={{ color: INK }}>
-                        {debate.topic}
-                      </p>
-
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <span
-                            className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold capitalize"
-                            style={{ backgroundColor: 'var(--clay-bg)', color: PRIMARY }}
-                          >
-                            {debate.difficulty || 'standard'}
-                          </span>
-                          <span className="text-[11px]" style={{ color: MUTED }}>
-                            {debate.total_turns ?? 0} turn{(debate.total_turns ?? 0) !== 1 ? 's' : ''}
+                          <span className="text-[11px] text-ap-muted">
+                            {formatDate(debate.started_at)}
                           </span>
                         </div>
-                        <span className="text-[11px] font-semibold opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1" style={{ color: PRIMARY }}>
-                          Resume <Sparkles size={11} />
-                        </span>
-                      </div>
-                    </motion.div>
-                  ))}
+
+                        <p className="mt-2.5 line-clamp-2 text-[15px] font-semibold leading-snug tracking-[-0.015em] text-ap-ink">
+                          {debate.topic}
+                        </p>
+
+                        <div className="mt-2.5 flex items-center justify-between gap-2.5">
+                          <div className="flex flex-wrap items-center gap-1.5">
+                            <span className="inline-flex h-6 items-center rounded-ap-sm border border-ap-line px-2.5 text-[11px] font-semibold capitalize text-ap-ink-soft">
+                              {debate.difficulty || 'standard'}
+                            </span>
+                            <span className="text-[11px] text-ap-muted">
+                              {debate.total_turns ?? 0} turn
+                              {(debate.total_turns ?? 0) !== 1 ? 's' : ''}
+                            </span>
+                          </div>
+                          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-ap-ink opacity-0 transition-opacity group-hover:opacity-100">
+                            Resume <Sparkles size={11} />
+                          </span>
+                        </div>
+                      </motion.div>
+                    );
+                  })}
                 </div>
               )}
             </div>

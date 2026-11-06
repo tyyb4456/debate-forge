@@ -22,10 +22,29 @@ import {
 import PreviousDebatesSidebar from '../components/PreviousDebatesSidebar';
 import ThemeToggle from '../components/ThemeToggle';
 
-const PRIMARY = 'var(--clay-primary)';
-const INK = 'var(--clay-ink)';
-const INK_SOFT = 'var(--clay-ink-soft)';
-const MUTED = 'var(--clay-muted)';
+const BTN =
+  'inline-flex items-center justify-center gap-2 rounded-ap border border-transparent bg-ap-accent px-5 font-semibold leading-none text-ap-accent-ink transition hover:-translate-y-px hover:bg-ap-accent/85 active:translate-y-0 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50';
+
+const BTN_GHOST =
+  'inline-flex items-center justify-center gap-2 rounded-ap border border-ap-line px-4 font-medium leading-none text-ap-ink transition hover:-translate-y-px hover:border-ap-line-strong hover:bg-ap-ink/5 disabled:cursor-not-allowed disabled:opacity-50';
+
+const CHIP =
+  'inline-flex h-6 items-center gap-1.5 whitespace-nowrap rounded-ap-sm border border-ap-line px-2.5 text-[11px] font-semibold text-ap-ink-soft';
+
+const KICKER =
+  'text-[11px] font-semibold uppercase leading-tight tracking-[0.18em] text-ap-muted';
+
+const DIFFICULTY_COLORS = {
+  casual: 'var(--color-ap-mint)',
+  standard: 'var(--color-ap-gold)',
+  expert: 'var(--color-ap-peach)',
+};
+
+const STARTERS = [
+  'Here is my opening case on this motion.',
+  'Start with the strongest argument against me.',
+  'Where is my argument weakest right now?',
+];
 
 // ============================================================================
 // MARKDOWN RENDERER
@@ -37,33 +56,83 @@ function MarkdownMessage({ content }) {
       remarkPlugins={[remarkGfm]}
       components={{
         p: ({ children }) => (
-          <p style={{ margin: '0 0 0.6em 0', fontSize: '0.9rem', lineHeight: '1.75', color: INK_SOFT, fontFamily: 'inherit' }}>
+          <p className="mb-[0.65em] text-[15px] leading-[1.75] text-ap-ink-soft last:mb-0">
             {children}
           </p>
         ),
-        strong: ({ children }) => <strong style={{ fontWeight: 700, color: PRIMARY }}>{children}</strong>,
-        em: ({ children }) => <em style={{ fontStyle: 'italic', color: INK_SOFT }}>{children}</em>,
-        ul: ({ children }) => <ul style={{ margin: '0.35em 0 0.6em 0', paddingLeft: '1.25em', listStyleType: 'disc' }}>{children}</ul>,
-        ol: ({ children }) => <ol style={{ margin: '0.35em 0 0.6em 0', paddingLeft: '1.35em', listStyleType: 'decimal' }}>{children}</ol>,
-        li: ({ children }) => <li style={{ fontSize: '0.9rem', lineHeight: '1.65', color: INK_SOFT, fontFamily: 'inherit', marginBottom: '0.2em' }}>{children}</li>,
+        strong: ({ children }) => (
+          <strong className="font-bold text-ap-ink">{children}</strong>
+        ),
+        em: ({ children }) => <em className="italic text-ap-ink-soft">{children}</em>,
+        ul: ({ children }) => <ul className="my-1.5 list-disc pl-5">{children}</ul>,
+        ol: ({ children }) => <ol className="my-1.5 list-decimal pl-5">{children}</ol>,
+        li: ({ children }) => (
+          <li className="mb-1 text-[15px] leading-relaxed text-ap-ink-soft">
+            {children}
+          </li>
+        ),
         blockquote: ({ children }) => (
-          <blockquote style={{ borderLeft: '3px solid color-mix(in srgb, var(--clay-primary) 40%, transparent)', margin: '0.5em 0', paddingLeft: '0.9em', color: MUTED, fontStyle: 'italic' }}>
+          <blockquote className="my-2.5 border-l-2 border-ap-accent pl-3.5 italic text-ap-muted">
             {children}
           </blockquote>
         ),
-        code: ({ inline, children, ...props }) =>
-          inline ? (
-            <code style={{ backgroundColor: 'var(--clay-primary-soft)', color: PRIMARY, borderRadius: '6px', padding: '2px 6px', fontSize: '0.8rem', fontFamily: 'monospace' }} {...props}>
-              {children}
-            </code>
-          ) : (
-            <pre style={{ backgroundColor: 'var(--clay-primary-soft)', borderRadius: '12px', padding: '12px 16px', overflowX: 'auto', margin: '0.55em 0' }}>
-              <code style={{ fontSize: '0.8rem', fontFamily: 'monospace', color: INK_SOFT }} {...props}>
-                {children}
-              </code>
-            </pre>
-          ),
-        hr: () => <hr style={{ border: 'none', borderTop: '1px solid color-mix(in srgb, var(--clay-primary) 14%, transparent)', margin: '0.9em 0' }} />,
+        a: ({ children, href }) => (
+          <a
+            className="text-ap-ink underline underline-offset-2"
+            href={href}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {children}
+          </a>
+        ),
+        h1: ({ children }) => (
+          <h3 className="mt-5 mb-2 text-xl font-bold tracking-[-0.02em] text-ap-ink">
+            {children}
+          </h3>
+        ),
+        h2: ({ children }) => (
+          <h4 className="mt-4 mb-2 text-lg font-bold tracking-[-0.02em] text-ap-ink">
+            {children}
+          </h4>
+        ),
+        h3: ({ children }) => (
+          <h5 className="mt-4 mb-1.5 text-base font-semibold text-ap-ink">
+            {children}
+          </h5>
+        ),
+        pre: ({ children }) => (
+          <pre className="my-2.5 overflow-x-auto rounded-ap-sm border border-ap-line bg-ap-surface-2 p-3.5">
+            {children}
+          </pre>
+        ),
+        code: ({ className, children }) => (
+          <code
+            className={
+              /language-/.test(className || '')
+                ? 'font-mono text-[0.82em] leading-relaxed text-ap-ink-soft'
+                : 'rounded-ap-sm border border-ap-line bg-ap-surface-2 px-1.5 py-0.5 font-mono text-[0.82em] text-ap-ink'
+            }
+          >
+            {children}
+          </code>
+        ),
+        hr: () => <hr className="my-4 border-ap-line" />,
+        table: ({ children }) => (
+          <div className="my-2.5 overflow-x-auto">
+            <table className="w-full border-collapse text-sm">{children}</table>
+          </div>
+        ),
+        th: ({ children }) => (
+          <th className="border border-ap-line bg-ap-surface-2 px-2.5 py-2 text-left font-semibold text-ap-ink">
+            {children}
+          </th>
+        ),
+        td: ({ children }) => (
+          <td className="border border-ap-line px-2.5 py-2 align-top text-ap-ink-soft">
+            {children}
+          </td>
+        ),
       }}
     >
       {content}
@@ -75,19 +144,28 @@ function MarkdownMessage({ content }) {
 // AGENT INSIGHTS
 // ============================================================================
 const AGENT_CONFIG = {
-  analyzer:            { label: 'Analyzer',        icon: Search,     color: 'var(--clay-primary)', bg: 'var(--clay-primary-soft)', border: 'color-mix(in srgb, var(--clay-primary) 22%, transparent)' },
-  researcher:          { label: 'Researcher',      icon: BookOpen,   color: 'var(--clay-blue)',    bg: 'var(--clay-blue-soft)',    border: 'color-mix(in srgb, var(--clay-blue) 24%, transparent)' },
-  socratic_questioner: { label: 'Socratic',        icon: HelpCircle, color: 'var(--clay-gold)',    bg: 'var(--clay-gold-soft)',    border: 'color-mix(in srgb, var(--clay-gold) 24%, transparent)' },
-  devils_advocate:     { label: "Devil's Advocate", icon: Flame,     color: 'var(--clay-peach)',   bg: 'var(--clay-peach-soft)',   border: 'color-mix(in srgb, var(--clay-peach) 24%, transparent)' },
+  analyzer: { label: 'Analyzer', icon: Search, color: 'var(--color-ap-ink)' },
+  researcher: { label: 'Researcher', icon: BookOpen, color: 'var(--color-ap-blue)' },
+  socratic_questioner: {
+    label: 'Socratic',
+    icon: HelpCircle,
+    color: 'var(--color-ap-gold)',
+  },
+  devils_advocate: {
+    label: "Devil's Advocate",
+    icon: Flame,
+    color: 'var(--color-ap-peach)',
+  },
 };
 
 function MessageInsights({ insights }) {
   const [openAgent, setOpenAgent] = useState(null);
   const active = Object.entries(insights).filter(([, v]) => v !== null);
   if (active.length === 0) return null;
+
   return (
-    <div className="mt-3 space-y-2">
-      <div className="flex flex-wrap gap-2">
+    <div className="mt-2.5">
+      <div className="flex flex-wrap gap-1.5">
         {active.map(([agent]) => {
           const cfg = AGENT_CONFIG[agent];
           if (!cfg) return null;
@@ -96,36 +174,53 @@ function MessageInsights({ insights }) {
           return (
             <motion.button
               key={agent}
+              type="button"
               onClick={() => setOpenAgent(isOpen ? null : agent)}
-              whileHover={{ y: -1 }}
-              whileTap={{ scale: 0.97 }}
-              className="clay-chip flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold transition-all"
-              style={{ backgroundColor: isOpen ? cfg.color : undefined, color: isOpen ? 'var(--clay-on-primary)' : cfg.color, boxShadow: isOpen ? `5px 5px 14px ${cfg.border}` : undefined }}
+              whileTap={{ scale: 0.98 }}
+              className={`inline-flex h-7 items-center gap-1.5 rounded-ap-sm border px-2.5 text-[11px] font-semibold transition-colors ${
+                isOpen
+                  ? 'border-transparent bg-ap-panel text-ap-panel-ink'
+                  : 'border-ap-line bg-transparent text-ap-ink-soft hover:border-ap-line-strong'
+              }`}
             >
-              <Icon size={11} />
+              <Icon size={11} style={{ color: isOpen ? 'currentColor' : cfg.color }} />
               {cfg.label}
-              <motion.div animate={{ rotate: isOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
+              <motion.span
+                animate={{ rotate: isOpen ? 180 : 0 }}
+                transition={{ duration: 0.2 }}
+                className="inline-flex"
+              >
                 <ChevronDown size={11} />
-              </motion.div>
+              </motion.span>
             </motion.button>
           );
         })}
       </div>
-      <AnimatePresence>
+
+      <AnimatePresence initial={false}>
         {openAgent && insights[openAgent] && (
           <motion.div
             key={openAgent}
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.25 }}
+            transition={{ duration: 0.24 }}
             className="overflow-hidden"
           >
-            <div className="clay-inset rounded-2xl p-4" style={{ borderLeft: `3px solid ${AGENT_CONFIG[openAgent]?.color}` }}>
+            <div
+              className="mt-2 rounded-ap-sm border border-ap-line border-l-2 bg-ap-surface p-4"
+              style={{ borderLeftColor: AGENT_CONFIG[openAgent]?.color }}
+            >
               {openAgent === 'analyzer' && <AnalyzerDetail output={insights.analyzer} />}
-              {openAgent === 'researcher' && <ResearcherDetail output={insights.researcher} />}
-              {openAgent === 'socratic_questioner' && <SocraticDetail output={insights.socratic_questioner} />}
-              {openAgent === 'devils_advocate' && <AdvocateDetail output={insights.devils_advocate} />}
+              {openAgent === 'researcher' && (
+                <ResearcherDetail output={insights.researcher} />
+              )}
+              {openAgent === 'socratic_questioner' && (
+                <SocraticDetail output={insights.socratic_questioner} />
+              )}
+              {openAgent === 'devils_advocate' && (
+                <AdvocateDetail output={insights.devils_advocate} />
+              )}
             </div>
           </motion.div>
         )}
@@ -136,43 +231,78 @@ function MessageInsights({ insights }) {
 
 function AnalyzerDetail({ output }) {
   let data;
-  try { data = typeof output === 'string' ? JSON.parse(output) : output; } catch { return null; }
+  try {
+    data = typeof output === 'string' ? JSON.parse(output) : output;
+  } catch {
+    return null;
+  }
+  const score = data.argument_strength?.overall_score;
+  const tone =
+    score >= 7
+      ? 'var(--color-ap-mint)'
+      : score >= 5
+        ? 'var(--color-ap-gold)'
+        : 'var(--color-ap-peach)';
+
   return (
-    <div className="space-y-3">
+    <div>
       {data.argument_strength && (
         <div>
-          <div className="flex items-center justify-between mb-1">
-            <p className="text-xs font-semibold" style={{ color: PRIMARY, fontFamily: 'inherit' }}>Argument Quality</p>
-            <span className="text-sm font-black" style={{ color: PRIMARY, fontFamily: 'inherit' }}>{data.argument_strength.overall_score}/10</span>
+          <div className="mb-2 flex items-baseline justify-between gap-3">
+            <p className="text-sm font-semibold text-ap-ink">Argument quality</p>
+            <span className="text-sm font-bold tabular-nums text-ap-ink">
+              {score}/10
+            </span>
           </div>
-          <div className="h-2 rounded-full overflow-hidden" style={{ backgroundColor: 'var(--clay-bg-deep)' }}>
+          <div className="h-1.5 overflow-hidden rounded-full bg-ap-line">
             <motion.div
               initial={{ width: 0 }}
-              animate={{ width: `${(data.argument_strength.overall_score / 10) * 100}%` }}
-              transition={{ duration: 0.8, ease: 'easeOut' }}
+              animate={{
+                width: `${Math.min(Math.max((score / 10) * 100, 0), 100)}%`,
+              }}
+              transition={{ duration: 0.7, ease: 'easeOut' }}
               className="h-full rounded-full"
-              style={{ backgroundColor: data.argument_strength.overall_score >= 7 ? 'var(--clay-mint)' : data.argument_strength.overall_score >= 5 ? 'var(--clay-gold)' : 'var(--clay-peach)' }}
+              style={{ backgroundColor: tone }}
             />
           </div>
-          {data.argument_strength.breakdown && <p className="text-xs mt-1.5" style={{ color: MUTED, fontFamily: 'inherit' }}>{data.argument_strength.breakdown}</p>}
+          {data.argument_strength.breakdown && (
+            <p className="mt-2 text-sm leading-relaxed text-ap-muted">
+              {data.argument_strength.breakdown}
+            </p>
+          )}
         </div>
       )}
+
       {data.fallacies_detected?.length > 0 && (
-        <div>
-          <p className="text-xs font-semibold mb-1.5" style={{ color: PRIMARY, fontFamily: 'inherit' }}>Logical Issues</p>
+        <div className="mt-4">
+          <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-ap-muted">
+            Logical issues
+          </p>
           {data.fallacies_detected.map((f, i) => (
-            <div key={i} className="p-2.5 rounded-xl mb-1.5" style={{ backgroundColor: f.severity === 'severe' ? 'var(--clay-peach-soft)' : 'var(--clay-gold-soft)' }}>
-              <p className="text-xs font-semibold capitalize" style={{ color: INK, fontFamily: 'inherit' }}>{f.type?.replace(/_/g, ' ')}</p>
-              <p className="text-xs mt-0.5" style={{ color: INK_SOFT, fontFamily: 'inherit' }}>{f.explanation}</p>
+            <div
+              key={i}
+              className="mb-1.5 rounded-ap-sm border border-ap-line bg-ap-surface-2 px-3 py-2.5 last:mb-0"
+            >
+              <p className="text-sm font-semibold capitalize text-ap-ink">
+                {f.type?.replace(/_/g, ' ')}
+              </p>
+              <p className="mt-0.5 text-sm leading-relaxed text-ap-ink-soft">
+                {f.explanation}
+              </p>
             </div>
           ))}
         </div>
       )}
+
       {data.implicit_assumptions?.length > 0 && (
-        <div>
-          <p className="text-xs font-semibold mb-1" style={{ color: PRIMARY, fontFamily: 'inherit' }}>Assumptions</p>
+        <div className="mt-4">
+          <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-ap-muted">
+            Assumptions
+          </p>
           {data.implicit_assumptions.slice(0, 2).map((a, i) => (
-            <p key={i} className="text-xs mb-0.5" style={{ color: INK_SOFT, fontFamily: 'inherit' }}>· {a.assumption || a}</p>
+            <p key={i} className="mb-1 text-sm leading-relaxed text-ap-ink-soft">
+              · {a.assumption || a}
+            </p>
           ))}
         </div>
       )}
@@ -182,49 +312,88 @@ function AnalyzerDetail({ output }) {
 
 function ResearcherDetail({ output }) {
   let data;
-  try { data = typeof output === 'string' ? JSON.parse(output) : output; } catch { return null; }
-  const supporting = data.supporting_evidence || [], opposing = data.opposing_evidence || [];
+  try {
+    data = typeof output === 'string' ? JSON.parse(output) : output;
+  } catch {
+    return null;
+  }
+  const supporting = data.supporting_evidence || [];
+  const opposing = data.opposing_evidence || [];
   const sc = data.overall_evidence_strength
     ? {
-        strong_support: { label: 'Strong Support', color: 'var(--clay-mint)', Icon: TrendingUp },
-        mixed: { label: 'Mixed Evidence', color: 'var(--clay-gold)', Icon: Minus },
-        strong_opposition: { label: 'Mostly Against', color: 'var(--clay-peach)', Icon: TrendingDown },
+        strong_support: {
+          label: 'Strong support',
+          color: 'var(--color-ap-mint)',
+          Icon: TrendingUp,
+        },
+        mixed: { label: 'Mixed evidence', color: 'var(--color-ap-gold)', Icon: Minus },
+        strong_opposition: {
+          label: 'Mostly against',
+          color: 'var(--color-ap-peach)',
+          Icon: TrendingDown,
+        },
       }[data.overall_evidence_strength]
     : null;
+
   return (
-    <div className="space-y-3">
+    <div>
       {sc && (
-        <div className="flex items-center gap-2">
-          <sc.Icon size={14} color={sc.color} />
-          <p className="text-xs font-semibold" style={{ color: sc.color, fontFamily: 'inherit' }}>
+        <div className="mb-3 flex items-center gap-2">
+          <sc.Icon size={13} style={{ color: sc.color }} />
+          <p className="text-sm font-semibold" style={{ color: sc.color }}>
             {sc.label} · {data.total_sources_found || 0} sources
           </p>
         </div>
       )}
+
       {data.strongest_source && (
-        <div>
-          <p className="text-xs font-semibold mb-1" style={{ color: 'var(--clay-blue)', fontFamily: 'inherit' }}>Most Credible</p>
-          <p className="text-xs" style={{ color: INK, fontFamily: 'inherit' }}>{data.strongest_source.title || data.strongest_source.source_name}</p>
+        <div className="mt-3 first:mt-0">
+          <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-ap-muted">
+            Most credible
+          </p>
+          <p className="text-sm leading-relaxed text-ap-ink-soft">
+            {data.strongest_source.title || data.strongest_source.source_name}
+          </p>
         </div>
       )}
+
       {supporting.length > 0 && (
-        <div>
-          <p className="text-xs font-semibold mb-1" style={{ color: 'var(--clay-mint)', fontFamily: 'inherit' }}>Supporting ({supporting.length})</p>
+        <div className="mt-4">
+          <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-ap-muted">
+            Supporting ({supporting.length})
+          </p>
           {supporting.slice(0, 2).map((ev, i) => (
-            <div key={i} className="p-2.5 rounded-xl mb-1.5" style={{ backgroundColor: 'var(--clay-mint-soft)' }}>
-              <p className="text-xs font-medium" style={{ color: INK, fontFamily: 'inherit' }}>{ev.source_name}</p>
-              {ev.key_finding && <p className="text-xs mt-0.5" style={{ color: INK_SOFT, fontFamily: 'inherit' }}>{ev.key_finding}</p>}
+            <div
+              key={i}
+              className="mb-1.5 rounded-ap-sm border border-ap-line bg-ap-mint-soft px-3 py-2.5 last:mb-0"
+            >
+              <p className="text-sm font-semibold text-ap-ink">{ev.source_name}</p>
+              {ev.key_finding && (
+                <p className="mt-0.5 text-sm leading-relaxed text-ap-ink-soft">
+                  {ev.key_finding}
+                </p>
+              )}
             </div>
           ))}
         </div>
       )}
+
       {opposing.length > 0 && (
-        <div>
-          <p className="text-xs font-semibold mb-1" style={{ color: 'var(--clay-peach)', fontFamily: 'inherit' }}>Opposing ({opposing.length})</p>
+        <div className="mt-4">
+          <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-ap-muted">
+            Opposing ({opposing.length})
+          </p>
           {opposing.slice(0, 2).map((ev, i) => (
-            <div key={i} className="p-2.5 rounded-xl mb-1.5" style={{ backgroundColor: 'var(--clay-peach-soft)' }}>
-              <p className="text-xs font-medium" style={{ color: INK, fontFamily: 'inherit' }}>{ev.source_name}</p>
-              {ev.key_finding && <p className="text-xs mt-0.5" style={{ color: INK_SOFT, fontFamily: 'inherit' }}>{ev.key_finding}</p>}
+            <div
+              key={i}
+              className="mb-1.5 rounded-ap-sm border border-ap-line bg-ap-peach-soft px-3 py-2.5 last:mb-0"
+            >
+              <p className="text-sm font-semibold text-ap-ink">{ev.source_name}</p>
+              {ev.key_finding && (
+                <p className="mt-0.5 text-sm leading-relaxed text-ap-ink-soft">
+                  {ev.key_finding}
+                </p>
+              )}
             </div>
           ))}
         </div>
@@ -235,13 +404,24 @@ function ResearcherDetail({ output }) {
 
 function SocraticDetail({ output }) {
   let data;
-  try { data = typeof output === 'string' ? JSON.parse(output) : output; } catch { return null; }
+  try {
+    data = typeof output === 'string' ? JSON.parse(output) : output;
+  } catch {
+    return null;
+  }
   return (
-    <div className="space-y-2">
+    <div>
       {data.questions?.map((q, i) => (
-        <div key={i} className="p-2.5 rounded-xl" style={{ backgroundColor: 'var(--clay-gold-soft)' }}>
-          <p className="text-xs font-medium" style={{ color: INK, fontFamily: 'inherit' }}>{q.question_text || q}</p>
-          {q.question_type && <p className="text-xs mt-0.5 capitalize" style={{ color: 'var(--clay-gold)', fontFamily: 'inherit' }}>{q.question_type.replace(/_/g, ' ')}</p>}
+        <div
+          key={i}
+          className="mb-1.5 rounded-ap-sm border border-ap-line bg-ap-surface-2 px-3 py-2.5 last:mb-0"
+        >
+          <p className="text-sm font-semibold text-ap-ink">{q.question_text || q}</p>
+          {q.question_type && (
+            <p className="mt-0.5 text-sm capitalize text-ap-muted">
+              {q.question_type.replace(/_/g, ' ')}
+            </p>
+          )}
         </div>
       ))}
     </div>
@@ -250,19 +430,34 @@ function SocraticDetail({ output }) {
 
 function AdvocateDetail({ output }) {
   let data;
-  try { data = typeof output === 'string' ? JSON.parse(output) : output; } catch { return null; }
+  try {
+    data = typeof output === 'string' ? JSON.parse(output) : output;
+  } catch {
+    return null;
+  }
   return (
-    <div className="space-y-2">
+    <div>
       {data.opposing_position && (
-        <div className="p-2.5 rounded-xl" style={{ backgroundColor: 'var(--clay-peach-soft)' }}>
-          <p className="text-xs font-semibold mb-0.5" style={{ color: 'var(--clay-peach)', fontFamily: 'inherit' }}>Counter-Position</p>
-          <p className="text-xs" style={{ color: INK, fontFamily: 'inherit' }}>{data.opposing_position.statement || data.opposing_position}</p>
+        <div className="mb-1.5 rounded-ap-sm border border-ap-line bg-ap-peach-soft px-3 py-2.5">
+          <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-ap-muted">
+            Counter-position
+          </p>
+          <p className="text-sm leading-relaxed text-ap-ink-soft">
+            {data.opposing_position.statement || data.opposing_position}
+          </p>
         </div>
       )}
       {data.counter_arguments?.slice(0, 2).map((arg, i) => (
-        <div key={i} className="p-2.5 rounded-xl" style={{ backgroundColor: 'var(--clay-peach-soft)' }}>
-          <p className="text-xs font-semibold capitalize" style={{ color: 'var(--clay-peach)', fontFamily: 'inherit' }}>{arg.type?.replace(/_/g, ' ')}</p>
-          <p className="text-xs mt-0.5" style={{ color: INK_SOFT, fontFamily: 'inherit' }}>{arg.argument}</p>
+        <div
+          key={i}
+          className="mb-1.5 rounded-ap-sm border border-ap-line bg-ap-peach-soft px-3 py-2.5 last:mb-0"
+        >
+          <p className="text-sm font-semibold capitalize text-ap-ink">
+            {arg.type?.replace(/_/g, ' ')}
+          </p>
+          <p className="mt-0.5 text-sm leading-relaxed text-ap-ink-soft">
+            {arg.argument}
+          </p>
         </div>
       ))}
     </div>
@@ -280,42 +475,58 @@ function Debate() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [loadingHistory, setLoadingHistory] = useState(true);
   const [feedback, setFeedback] = useState(null);
   const [currentStream, setCurrentStream] = useState(null);
   const [currentAgent, setCurrentAgent] = useState(null);
   const [statusMessage, setStatusMessage] = useState('');
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
 
-  const pendingInsightsRef = useRef({ analyzer: null, researcher: null, socratic_questioner: null, devils_advocate: null });
+  const pendingInsightsRef = useRef({
+    analyzer: null,
+    researcher: null,
+    socratic_questioner: null,
+    devils_advocate: null,
+  });
   const messagesEndRef = useRef(null);
+  const inputRef = useRef(null);
 
   const topic = location.state?.topic || 'Debate Topic';
   const difficulty = location.state?.difficulty || 'standard';
   const turnCount = Math.floor(messages.length / 2);
+  const difficultyColor = DIFFICULTY_COLORS[difficulty] || DIFFICULTY_COLORS.standard;
 
-  const difficultyColor = { casual: 'var(--clay-mint)', standard: 'var(--clay-gold)', expert: 'var(--clay-peach)' }[difficulty] || 'var(--clay-gold)';
-
-  useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages]);
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
 
   useEffect(() => {
     const loadPreviousMessages = async () => {
       try {
-        const res = await fetch(`http://127.0.0.1:8000/api/user/debate/${sessionId}/turns`);
+        const res = await fetch(
+          `http://127.0.0.1:8000/api/user/debate/${sessionId}/turns`
+        );
         const data = await res.json();
-        setMessages(data.turns.flatMap((t) => [
-          { role: 'user', content: t.user_input },
-          {
-            role: 'assistant',
-            content: t.ai_response,
-            insights: {
-              analyzer: t.analyzer_output || null,
-              researcher: t.research_output || null,
-              socratic_questioner: t.socratic_output || null,
-              devils_advocate: t.advocate_output || null,
+        setMessages(
+          data.turns.flatMap((t) => [
+            { role: 'user', content: t.user_input },
+            {
+              role: 'assistant',
+              content: t.ai_response,
+              insights: {
+                analyzer: t.analyzer_output || null,
+                researcher: t.research_output || null,
+                socratic_questioner: t.socratic_output || null,
+                devils_advocate: t.advocate_output || null,
+              },
             },
-          },
-        ]));
-      } catch (error) { console.error(error); }
+          ])
+        );
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoadingHistory(false);
+      }
     };
 
     loadPreviousMessages();
@@ -327,16 +538,22 @@ function Debate() {
     const userInput = input;
     setInput('');
     setIsLoading(true);
-    pendingInsightsRef.current = { analyzer: null, researcher: null, socratic_questioner: null, devils_advocate: null };
+    pendingInsightsRef.current = {
+      analyzer: null,
+      researcher: null,
+      socratic_questioner: null,
+      devils_advocate: null,
+    };
     const idx = messages.length + 1;
     setMessages((p) => [...p, { role: 'assistant', content: '', insights: null }]);
     try {
       const stream = new DebateStream(sessionId, userInput, {
-        onToken: (token) => setMessages((p) => {
-          const n = [...p];
-          if (n[idx]) n[idx] = { ...n[idx], content: n[idx].content + token };
-          return n;
-        }),
+        onToken: (token) =>
+          setMessages((p) => {
+            const n = [...p];
+            if (n[idx]) n[idx] = { ...n[idx], content: n[idx].content + token };
+            return n;
+          }),
         onAgentOutput: (agent, output) => {
           pendingInsightsRef.current = { ...pendingInsightsRef.current, [agent]: output };
           setCurrentAgent(agent);
@@ -364,7 +581,9 @@ function Debate() {
         },
       });
       setCurrentStream(stream);
-    } catch { setIsLoading(false); }
+    } catch {
+      setIsLoading(false);
+    }
   };
 
   const handleFallback = async (userInput, idx) => {
@@ -376,7 +595,9 @@ function Debate() {
         return n;
       });
       if (res.debate_ended && res.growth_feedback) setFeedback(res.growth_feedback);
-    } catch { alert('Failed to send message'); }
+    } catch {
+      alert('Failed to send message');
+    }
   };
 
   const handleEndDebate = async () => {
@@ -384,7 +605,9 @@ function Debate() {
     try {
       await debateService.endDebate(sessionId);
       navigate('/');
-    } catch { alert('Failed to end debate'); }
+    } catch {
+      alert('Failed to end debate');
+    }
   };
 
   const handleSelectDebate = (debate) => {
@@ -401,60 +624,65 @@ function Debate() {
   };
 
   useEffect(() => {
-    return () => { if (currentStream) currentStream.close(); };
+    return () => {
+      if (currentStream) currentStream.close();
+    };
   }, [currentStream]);
 
+  const applyStarter = (text) => {
+    setInput(text);
+    inputRef.current?.focus();
+  };
+
   return (
-    <div className="h-screen flex flex-col overflow-hidden clay-bg">
-      {/* ================================================================
-          HEADER
-      ================================================================ */}
-      <div className="shrink-0 px-4 sm:px-8 pt-5">
-        <div className="clay-card max-w-5xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-4">
-          {/* LEFT */}
-          <div className="flex items-center gap-3 min-w-0">
-            <div className="clay-avatar w-10 h-10 shrink-0">
-              <AnimatePresence mode="wait">
-                {currentAgent ? (
-                  <motion.div key="a" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }} transition={{ duration: 0.15 }}>
-                    <Zap size={16} color="var(--clay-on-primary)" fill="var(--clay-on-primary)" />
-                  </motion.div>
-                ) : (
-                  <motion.div key="b" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
-                    <Zap size={16} color="var(--clay-on-primary)" />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
+    <div className="flex h-svh flex-col overflow-hidden bg-ap-bg font-sans text-ap-ink selection:bg-ap-accent selection:text-ap-accent-ink">
+      <header className="shrink-0 border-b border-ap-line bg-ap-bg">
+        <div className="mx-auto flex min-h-[76px] w-full max-w-[1120px] flex-wrap items-center justify-between gap-5 px-5 py-3 sm:px-8">
+          <div className="flex min-w-0 flex-1 items-center gap-4 max-[700px]:flex-wrap">
+            <button
+              type="button"
+              className="inline-flex items-center gap-2.5 text-lg font-bold tracking-[-0.025em] text-ap-ink"
+              onClick={() => navigate('/')}
+              aria-label="Back to DebateAI home"
+            >
+              <span className="inline-flex h-[26px] w-[26px] items-center justify-center rounded-ap-sm bg-ap-accent text-[13px] font-bold text-ap-accent-ink">
+                D
+              </span>
+              <span className="max-[700px]:hidden">DebateAI</span>
+            </button>
+
+            <span className="h-[30px] w-px bg-ap-line max-[700px]:hidden" aria-hidden="true" />
 
             <div className="min-w-0">
-              <h2
-                className="font-display leading-tight truncate text-[clamp(1rem,2vw,1.3rem)]"
-                style={{ color: INK, maxWidth: '46vw' }}
+              <span className={`mb-1 block ${KICKER}`}>Motion</span>
+              <h1
+                className="m-0 max-w-[40ch] truncate text-lg font-semibold leading-tight tracking-[-0.02em] text-ap-ink max-[700px]:max-w-full"
+                title={topic}
               >
                 {topic}
-              </h2>
-              <div className="flex items-center gap-2 mt-1 flex-wrap">
-                <span
-                  className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold capitalize"
-                  style={{ backgroundColor: `color-mix(in srgb, ${difficultyColor} 16%, transparent)`, color: difficultyColor }}
-                >
-                  <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: difficultyColor }} />
-                  {difficulty}
+              </h1>
+              <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+                <span className={CHIP}>
+                  <span
+                    className="h-1.5 w-1.5 rounded-full"
+                    style={{ backgroundColor: difficultyColor }}
+                  />
+                  <span className="capitalize">{difficulty}</span>
                 </span>
-                <span className="clay-chip px-2.5 py-0.5 text-[11px] font-semibold" style={{ color: MUTED }}>
-                  Turn {turnCount}
-                </span>
+                <span className={`${CHIP} text-ap-muted`}>Turn {turnCount}</span>
                 <AnimatePresence>
                   {currentAgent && (
                     <motion.span
                       initial={{ opacity: 0, x: -6 }}
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: -6 }}
-                      className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold"
-                      style={{ backgroundColor: 'var(--clay-mint-soft)', color: 'var(--clay-mint)' }}
+                      className="inline-flex h-6 items-center gap-1.5 whitespace-nowrap rounded-ap-sm border border-ap-mint/35 bg-ap-mint/10 px-2.5 text-[11px] font-semibold text-ap-mint"
                     >
-                      <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: 'var(--clay-mint)' }} />
+                      <motion.span
+                        className="h-1.5 w-1.5 rounded-full bg-current"
+                        animate={{ opacity: [0.35, 1, 0.35] }}
+                        transition={{ repeat: Infinity, duration: 1.1 }}
+                      />
                       {currentAgent.replace(/_/g, ' ')}
                     </motion.span>
                   )}
@@ -463,242 +691,300 @@ function Debate() {
             </div>
           </div>
 
-          {/* RIGHT */}
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex shrink-0 items-center gap-2 max-[700px]:ml-0.5">
             <ThemeToggle />
-
-            <motion.button
+            <button
+              type="button"
+              className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-ap-sm border border-ap-line bg-transparent text-ap-ink transition-colors hover:border-ap-line-strong hover:bg-ap-ink/5"
               onClick={() => setIsHistoryOpen(true)}
-              whileHover={{ y: -2 }}
-              whileTap={{ scale: 0.95 }}
-              className="clay-btn-soft px-3.5 py-2.5 rounded-2xl text-sm font-medium"
-              style={{ color: INK_SOFT }}
+              aria-label="Debate history"
+              title="Debate history"
             >
-              <History size={15} />
-              <span className="hidden sm:inline text-xs">History</span>
-            </motion.button>
-
-            <div className="w-px h-6" style={{ backgroundColor: 'var(--clay-bg-deep)' }} />
-
-            <motion.button
+              <History size={17} />
+            </button>
+            <button
+              type="button"
+              className={`${BTN_GHOST} h-[38px] px-3 text-sm text-ap-ink-soft hover:border-ap-danger/45 hover:bg-ap-danger/5 hover:text-ap-danger`}
               onClick={handleEndDebate}
-              whileHover={{ y: -2 }}
-              whileTap={{ scale: 0.95 }}
-              className="clay-btn-soft px-3.5 py-2.5 rounded-2xl text-xs font-semibold"
-              style={{ color: 'var(--clay-ink-soft)' }}
-              onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--clay-danger)'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--clay-ink-soft)'; }}
             >
-              <span className="hidden sm:inline">End Debate</span>
+              <span className="hidden sm:inline">End debate</span>
               <span className="sm:hidden">End</span>
-            </motion.button>
+            </button>
           </div>
         </div>
-      </div>
+      </header>
 
-      {/* ================================================================
-          MESSAGES
-      ================================================================ */}
-      <div className="flex-1 overflow-y-auto px-4 sm:px-8 py-8">
-        <div className="max-w-3xl mx-auto">
-          <AnimatePresence initial={false}>
-            {messages.map((msg, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
-                className={`flex mb-7 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
-              >
-                {msg.role === 'assistant' && (
-                  <div className="clay-avatar w-9 h-9 text-[11px] font-bold shrink-0 mr-3 mt-1">AI</div>
-                )}
+      <main className="min-h-0 flex-1 overflow-y-auto">
+        <div className="mx-auto w-full max-w-[860px] px-5 pb-7 pt-7 sm:px-8 sm:pt-10">
+          {loadingHistory ? (
+            <div className="flex min-h-[40vh] flex-col items-center justify-center gap-3 text-sm text-ap-muted">
+              <span className="h-[34px] w-[34px] animate-spin rounded-full border-2 border-ap-line border-t-ap-ink" />
+              <span>Loading the transcript…</span>
+            </div>
+          ) : messages.length === 0 && !isLoading ? (
+            <div className="flex min-h-[55vh] items-center justify-center py-10">
+              <div className="w-full max-w-[540px]">
+                <span className={KICKER}>The floor is yours</span>
+                <h2 className="mt-3.5 text-4xl font-bold leading-none tracking-[-0.035em] sm:text-5xl">
+                  Make your <em className="not-italic text-ap-muted">opening case.</em>
+                </h2>
+                <p className="mt-4 max-w-[42ch] text-[15px] leading-relaxed text-ap-ink-soft">
+                  State a clear, arguable claim on “{topic}”. Your panel will take it
+                  apart one specialist at a time.
+                </p>
+                <div className="mt-6 flex flex-wrap gap-2">
+                  {STARTERS.map((starter, i) => (
+                    <button
+                      key={starter}
+                      type="button"
+                      className="inline-flex w-full items-center gap-2 rounded-ap-sm border border-ap-line px-3.5 py-2.5 text-left text-sm leading-snug text-ap-ink-soft transition-colors hover:border-ap-line-strong hover:bg-ap-ink/5 hover:text-ap-ink sm:w-auto"
+                      onClick={() => applyStarter(starter)}
+                    >
+                      <span className="tabular-nums text-ap-muted">0{i + 1}</span>
+                      <span>{starter}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ) : (
+            <AnimatePresence initial={false}>
+              {messages.map((msg, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.28 }}
+                  className={`mb-7 flex items-start gap-3 ${
+                    msg.role === 'user' ? 'justify-end' : ''
+                  }`}
+                >
+                  {msg.role === 'assistant' && (
+                    <div className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-ap-sm border border-transparent bg-ap-panel text-[10px] font-bold tracking-[0.08em] text-ap-panel-ink">
+                      AI
+                    </div>
+                  )}
 
-                <div className={msg.role === 'user' ? 'max-w-[80%]' : 'flex-1 min-w-0'}>
                   <div
-                    className={msg.role === 'user' ? 'clay-inset-primary px-5 py-4 inline-block max-w-full' : 'clay-card-sm px-5 py-4'}
-                    style={msg.role === 'user' ? { borderBottomRightRadius: '8px' } : { borderBottomLeftRadius: '8px' }}
+                    className={
+                      msg.role === 'user'
+                        ? 'min-w-0 max-w-[82%] flex-none max-[700px]:max-w-[88%]'
+                        : 'min-w-0 flex-1'
+                    }
                   >
                     {msg.role === 'assistant' ? (
-                      msg.content ? (
-                        <MarkdownMessage content={msg.content} />
-                      ) : (
-                        <span style={{ color: MUTED, fontSize: '0.9rem' }}>…</span>
-                      )
+                      <div className="rounded-ap border border-ap-line bg-ap-surface px-5 py-4">
+                        {msg.content ? (
+                          <MarkdownMessage content={msg.content} />
+                        ) : (
+                          <span className="text-[15px] text-ap-muted">…</span>
+                        )}
+                      </div>
                     ) : (
-                      <p className="whitespace-pre-wrap text-[0.9rem] leading-relaxed" style={{ color: 'var(--bubble-color)', fontFamily: 'inherit' }}>
-                        {msg.content}
-                      </p>
+                      <div className="rounded-ap bg-ap-panel px-4 py-3 text-ap-panel-ink">
+                        <p className="whitespace-pre-wrap text-[15px] leading-relaxed">
+                          {msg.content}
+                        </p>
+                      </div>
+                    )}
+                    {msg.role === 'assistant' && msg.insights && (
+                      <MessageInsights insights={msg.insights} />
                     )}
                   </div>
-                  {msg.role === 'assistant' && msg.insights && <MessageInsights insights={msg.insights} />}
-                </div>
 
-                {msg.role === 'user' && (
-                  <div className="clay-avatar-soft w-9 h-9 text-[11px] font-bold shrink-0 ml-3 mt-1">
-                    U
-                  </div>
-                )}
-              </motion.div>
-            ))}
-          </AnimatePresence>
+                  {msg.role === 'user' && (
+                    <div className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-ap-sm border border-ap-line bg-transparent text-[10px] font-bold tracking-[0.08em] text-ap-muted">
+                      U
+                    </div>
+                  )}
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          )}
 
           {isLoading && messages[messages.length - 1]?.content === '' && (
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex justify-start mb-6">
-              <div className="clay-avatar w-9 h-9 text-[11px] font-bold shrink-0 mr-3 mt-1">AI</div>
-              <div className="clay-card-sm px-5 py-4 flex items-center gap-2">
-                {[0, 0.18, 0.36].map((d, i) => (
-                  <motion.div
-                    key={i}
-                    animate={{ scale: [1, 1.5, 1], opacity: [0.4, 1, 0.4] }}
-                    transition={{ repeat: Infinity, duration: 0.9, delay: d }}
-                    className="w-2 h-2 rounded-full"
-                    style={{ backgroundColor: PRIMARY }}
-                  />
-                ))}
-                {statusMessage && (
-                  <span className="text-xs ml-2" style={{ color: MUTED, fontFamily: 'inherit' }}>
-                    {statusMessage}
-                  </span>
-                )}
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-6 flex items-center gap-3"
+            >
+              <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-ap-sm border border-transparent bg-ap-panel text-[10px] font-bold tracking-[0.08em] text-ap-panel-ink">
+                AI
+              </div>
+              <div className="flex items-center gap-2.5 rounded-ap border border-ap-line bg-ap-surface px-4 py-3.5">
+                <span className="flex gap-1">
+                  {[0, 0.18, 0.36].map((d, i) => (
+                    <motion.span
+                      key={i}
+                      className="h-1.5 w-1.5 rounded-full bg-ap-accent"
+                      animate={{ scale: [1, 1.5, 1], opacity: [0.4, 1, 0.4] }}
+                      transition={{ repeat: Infinity, duration: 0.9, delay: d }}
+                    />
+                  ))}
+                </span>
+                <span className="text-sm capitalize text-ap-muted">
+                  {statusMessage || 'Assembling the panel'}
+                </span>
               </div>
             </motion.div>
           )}
+
           <div ref={messagesEndRef} />
         </div>
-      </div>
+      </main>
 
-      {/* ================================================================
-          INPUT
-      ================================================================ */}
-      <div className="shrink-0 px-4 sm:px-8 pb-6 pt-1">
-        <div className="max-w-3xl mx-auto clay-card p-3 flex items-end gap-2.5">
-          <textarea
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Type your argument…"
-            disabled={isLoading}
-            rows={1}
-            className="clay-input flex-1 resize-none px-4 py-3.5 text-sm disabled:opacity-50"
-            style={{ fontFamily: 'inherit' }}
-          />
-          <motion.button
-            onClick={handleSendMessage}
-            disabled={isLoading || !input.trim()}
-            whileHover={!isLoading && input.trim() ? { y: -2 } : {}}
-            whileTap={!isLoading && input.trim() ? { scale: 0.96 } : {}}
-            className="clay-btn px-5 py-3.5 text-sm font-bold tracking-[0.04em] uppercase shrink-0"
-          >
-            {isLoading ? (
-              <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-              </svg>
-            ) : (
-              <>
-                <span className="hidden sm:inline">Send</span>
-                <ArrowUp size={17} />
-              </>
-            )}
-          </motion.button>
+      <div className="shrink-0 bg-ap-bg px-5 pb-[18px] pt-3 sm:px-8">
+        <div className="mx-auto max-w-[860px]">
+          <div className="flex items-end gap-2.5 rounded-ap border border-ap-line bg-ap-surface p-2.5 transition-colors focus-within:border-ap-line-strong">
+            <textarea
+              ref={inputRef}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="Type your argument…"
+              disabled={isLoading}
+              rows={1}
+              className="max-h-[180px] min-h-[44px] flex-1 resize-none border-0 bg-transparent px-2.5 py-[11px] text-[15px] leading-relaxed text-ap-ink outline-none placeholder:text-ap-muted disabled:opacity-50"
+            />
+            <motion.button
+              type="button"
+              onClick={handleSendMessage}
+              disabled={isLoading || !input.trim()}
+              whileHover={!isLoading && input.trim() ? { y: -1 } : {}}
+              whileTap={!isLoading && input.trim() ? { scale: 0.98 } : {}}
+              className={`${BTN} h-11 shrink-0 px-[18px]`}
+            >
+              {isLoading ? (
+                <svg
+                  className="animate-spin"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <circle
+                    opacity="0.25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                    fill="none"
+                  />
+                  <path
+                    opacity="0.75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                  />
+                </svg>
+              ) : (
+                <>
+                  Send
+                  <ArrowUp size={16} />
+                </>
+              )}
+            </motion.button>
+          </div>
+          <p className="mt-2 text-center text-[11px] text-ap-muted">
+            Enter to send · Shift + Enter for a new line
+          </p>
         </div>
-        <p className="mt-2.5 text-[11px] text-center" style={{ color: MUTED, fontFamily: 'inherit' }}>
-          Enter to send · Shift + Enter for a new line
-        </p>
       </div>
 
-      {/* ================================================================
-          HISTORY SIDEBAR
-      ================================================================ */}
       <PreviousDebatesSidebar
         isOpen={isHistoryOpen}
         onClose={() => setIsHistoryOpen(false)}
         onSelectDebate={handleSelectDebate}
       />
 
-      {/* ================================================================
-          FEEDBACK MODAL
-      ================================================================ */}
       <AnimatePresence>
         {feedback && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
-            style={{ backgroundColor: 'rgba(11,17,32,0.55)', backdropFilter: 'blur(10px)' }}
-            onClick={() => { setFeedback(null); navigate('/'); }}
+            className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 p-5 backdrop-blur-sm"
+            onClick={() => {
+              setFeedback(null);
+              navigate('/');
+            }}
           >
             <motion.div
-              initial={{ scale: 0.9, y: 20 }}
+              initial={{ scale: 0.97, y: 16 }}
               animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, y: 20 }}
+              exit={{ scale: 0.97, y: 12 }}
+              transition={{ duration: 0.22 }}
               onClick={(e) => e.stopPropagation()}
-              className="clay-card max-w-2xl w-full max-h-[82vh] overflow-y-auto p-7 sm:p-8"
+              className="max-h-[86vh] w-full max-w-[620px] overflow-y-auto rounded-ap border border-ap-line bg-ap-bg p-6 sm:p-9"
             >
-              <div className="clay-avatar w-12 h-12 mb-5">
-                <Zap size={20} />
+              <div className="mb-5 inline-flex h-10 w-10 items-center justify-center rounded-ap-sm bg-ap-accent text-ap-accent-ink">
+                <Zap size={18} />
               </div>
 
-              <h2 className="font-display mb-6 text-[clamp(1.8rem,4vw,2.5rem)] leading-tight" style={{ color: INK }}>
+              <span className={KICKER}>Session review</span>
+              <h2 className="mt-2.5 text-3xl font-bold leading-none tracking-[-0.035em] sm:text-4xl">
                 Debate complete
               </h2>
 
-              <div className="space-y-5">
-                {feedback.session_summary && (
-                  <div className="clay-inset rounded-2xl p-4">
-                    <p className="text-[10px] font-bold tracking-[0.2em] uppercase mb-1" style={{ color: MUTED, fontFamily: 'inherit' }}>
-                      Overall performance
-                    </p>
-                    <p className="text-2xl font-display capitalize" style={{ color: PRIMARY }}>
-                      {feedback.session_summary.overall_performance || 'Completed'}
-                    </p>
-                  </div>
-                )}
+              {feedback.session_summary && (
+                <div className="mt-6 rounded-ap-sm bg-ap-panel px-4 py-4 text-ap-panel-ink">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-ap-panel-muted">
+                    Overall performance
+                  </p>
+                  <p className="mt-1.5 text-2xl font-bold capitalize tracking-[-0.03em] text-ap-accent">
+                    {feedback.session_summary.overall_performance || 'Completed'}
+                  </p>
+                </div>
+              )}
 
-                {feedback.what_went_well?.length > 0 && (
-                  <div>
-                    <p className="text-[10px] font-bold tracking-[0.2em] uppercase mb-3" style={{ color: PRIMARY, fontFamily: 'inherit' }}>
-                      What went well
-                    </p>
-                    <ul className="space-y-2">
-                      {feedback.what_went_well.map((s, i) => (
-                        <li key={i} className="flex items-start gap-2.5 text-sm rounded-xl p-2.5" style={{ color: INK_SOFT, fontFamily: 'inherit', backgroundColor: 'var(--clay-mint-soft)' }}>
-                          <span style={{ color: 'var(--clay-mint)', flexShrink: 0, fontWeight: 700 }}>✓</span>
-                          {s}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
+              {feedback.what_went_well?.length > 0 && (
+                <div className="mt-5">
+                  <p className={KICKER}>What went well</p>
+                  <ul className="mt-2.5 flex flex-col gap-1.5">
+                    {feedback.what_went_well.map((s, i) => (
+                      <li
+                        key={i}
+                        className="flex items-start gap-2.5 rounded-ap-sm border border-ap-line bg-ap-mint-soft px-3 py-2.5 text-sm leading-relaxed text-ap-ink-soft"
+                      >
+                        <span className="shrink-0 font-bold text-ap-mint">✓</span>
+                        {s}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
 
-                {feedback.areas_for_improvement?.length > 0 && (
-                  <div>
-                    <p className="text-[10px] font-bold tracking-[0.2em] uppercase mb-3" style={{ color: PRIMARY, fontFamily: 'inherit' }}>
-                      Areas to improve
-                    </p>
-                    <ul className="space-y-2">
-                      {feedback.areas_for_improvement.map((a, i) => (
-                        <li key={i} className="flex items-start gap-2.5 text-sm rounded-xl p-2.5" style={{ color: INK_SOFT, fontFamily: 'inherit', backgroundColor: 'var(--clay-peach-soft)' }}>
-                          <span style={{ color: 'var(--clay-peach)', flexShrink: 0, fontWeight: 700 }}>→</span>
-                          <span><strong style={{ color: INK }}>{a.area}: </strong>{a.suggestion || a.issue || a}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </div>
+              {feedback.areas_for_improvement?.length > 0 && (
+                <div className="mt-5">
+                  <p className={KICKER}>Areas to improve</p>
+                  <ul className="mt-2.5 flex flex-col gap-1.5">
+                    {feedback.areas_for_improvement.map((a, i) => (
+                      <li
+                        key={i}
+                        className="flex items-start gap-2.5 rounded-ap-sm border border-ap-line bg-ap-peach-soft px-3 py-2.5 text-sm leading-relaxed text-ap-ink-soft"
+                      >
+                        <span className="shrink-0 font-bold text-ap-peach">→</span>
+                        <span>
+                          <strong className="text-ap-ink">{a.area}: </strong>
+                          {a.suggestion || a.issue || a}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
 
-              <motion.button
-                onClick={() => { setFeedback(null); navigate('/'); }}
-                whileHover={{ y: -2 }}
-                whileTap={{ scale: 0.98 }}
-                className="clay-btn mt-7 w-full py-4 text-sm font-bold tracking-[0.06em] uppercase"
+              <button
+                type="button"
+                onClick={() => {
+                  setFeedback(null);
+                  navigate('/');
+                }}
+                className={`${BTN} mt-6 w-full`}
               >
                 Return home
-              </motion.button>
+              </button>
             </motion.div>
           </motion.div>
         )}

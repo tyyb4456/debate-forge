@@ -4,9 +4,6 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, ArrowRight } from 'lucide-react';
 
-const INK = 'var(--clay-ink)';
-const INK_SOFT = 'var(--clay-ink-soft)';
-const MUTED = 'var(--clay-muted)';
 const DUMMY_USER_ID = '8f3c2e7b-6b4a-4c9a-9e6f-2d5c1a8f7e42';
 
 export default function NameSetupModal({ isOpen, onComplete }) {
@@ -16,17 +13,26 @@ export default function NameSetupModal({ isOpen, onComplete }) {
 
   const handleSubmit = async () => {
     const trimmed = name.trim();
-    if (!trimmed) { setError('Please enter a name'); return; }
-    if (trimmed.length < 2) { setError('Name must be at least 2 characters'); return; }
+    if (!trimmed) {
+      setError('Please enter a name');
+      return;
+    }
+    if (trimmed.length < 2) {
+      setError('Name must be at least 2 characters');
+      return;
+    }
 
     setLoading(true);
     setError('');
     try {
-      const res = await fetch(`http://127.0.0.1:8000/api/user/${DUMMY_USER_ID}/update`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username: trimmed }),
-      });
+      const res = await fetch(
+        `http://127.0.0.1:8000/api/user/${DUMMY_USER_ID}/update`,
+        {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: trimmed }),
+        }
+      );
       if (!res.ok) throw new Error('Failed to save');
       onComplete(trimmed);
     } catch {
@@ -48,62 +54,64 @@ export default function NameSetupModal({ isOpen, onComplete }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50"
-            style={{ backgroundColor: 'rgba(11,17,32,0.55)', backdropFilter: 'blur(8px)' }}
+            className="fixed inset-0 z-50 bg-black/55 backdrop-blur-[8px]"
           />
 
           <motion.div
-            initial={{ opacity: 0, scale: 0.92, y: 24 }}
+            initial={{ opacity: 0, scale: 0.97, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 10 }}
+            exit={{ opacity: 0, scale: 0.97, y: 10 }}
             transition={{ type: 'spring', stiffness: 300, damping: 26 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4"
-            style={{ pointerEvents: 'none' }}
+            className="pointer-events-none fixed inset-0 z-50 flex items-center justify-center p-4"
           >
-            <div className="clay-card w-full max-w-sm p-7 sm:p-8 flex flex-col gap-6" style={{ pointerEvents: 'all' }}>
-              <div className="flex justify-center">
-                <div className="clay-avatar w-20 h-20 text-3xl font-display relative">
-                  {name.trim().charAt(0).toUpperCase() || '?'}
-                  <span className="absolute -top-1.5 -right-1.5 w-7 h-7 rounded-full flex items-center justify-center" style={{ background: 'var(--avatar-soft-bg)', boxShadow: 'var(--shadow-clay-sm)' }}>
-                    <Sparkles size={13} style={{ color: 'var(--clay-primary)' }} />
-                  </span>
-                </div>
+            <div className="pointer-events-auto w-full max-w-[420px] rounded-ap border border-ap-line bg-ap-bg p-6 font-sans text-ap-ink sm:p-8">
+              <div className="relative mb-5 inline-flex h-16 w-16 items-center justify-center rounded-ap-sm bg-ap-panel text-2xl font-bold tracking-[-0.03em] text-ap-panel-ink">
+                {name.trim().charAt(0).toUpperCase() || '?'}
+                <span className="absolute -right-[7px] -top-[7px] inline-flex h-6 w-6 items-center justify-center rounded-ap-sm bg-ap-accent text-ap-accent-ink">
+                  <Sparkles size={13} />
+                </span>
               </div>
 
-              <div className="text-center">
-                <h2 className="font-display text-2xl sm:text-3xl leading-tight" style={{ color: INK }}>
-                  What's your name?
-                </h2>
-                <p className="text-sm mt-2" style={{ color: MUTED, fontFamily: 'inherit' }}>
-                  We'll use this to personalize your experience.
-                </p>
-              </div>
+              <span className="text-[11px] font-semibold uppercase leading-tight tracking-[0.18em] text-ap-muted">
+                One last thing
+              </span>
+              <h2 className="mt-2.5 text-3xl font-bold leading-[1.02] tracking-[-0.035em] sm:text-4xl">
+                What should we call you?
+              </h2>
+              <p className="mt-2.5 text-sm leading-relaxed text-ap-ink-soft">
+                We'll use this to personalize your experience.
+              </p>
 
-              <div className="flex flex-col gap-2">
+              <div className="mt-6 flex flex-col gap-2">
                 <input
                   type="text"
                   value={name}
-                  onChange={(e) => { setName(e.target.value); setError(''); }}
+                  onChange={(e) => {
+                    setName(e.target.value);
+                    setError('');
+                  }}
                   onKeyDown={handleKey}
                   placeholder="Enter your name…"
                   maxLength={50}
                   autoFocus
-                  className="clay-input px-4 py-3.5 text-base"
-                  style={error ? { boxShadow: 'inset 0 0 0 2px color-mix(in srgb, var(--clay-danger) 55%, transparent)' } : undefined}
+                  className={`h-[46px] w-full rounded-ap-sm border bg-ap-surface-2 px-3.5 text-base font-medium text-ap-ink outline-none transition-colors placeholder:text-ap-muted focus:bg-ap-surface ${
+                    error
+                      ? 'border-ap-danger'
+                      : 'border-ap-line focus:border-ap-line-strong'
+                  }`}
                 />
-                {error && (
-                  <p className="text-xs" style={{ color: 'var(--clay-danger)', fontFamily: 'inherit' }}>
-                    {error}
-                  </p>
-                )}
+                {error && <p className="text-sm text-ap-danger">{error}</p>}
               </div>
 
               <button
+                type="button"
                 onClick={handleSubmit}
                 disabled={loading}
-                className="clay-btn w-full py-3.5 text-sm font-bold uppercase tracking-[0.08em]"
+                className="mt-4 inline-flex h-12 w-full items-center justify-center gap-2 rounded-ap border border-transparent bg-ap-accent px-5 text-[15px] font-semibold leading-none text-ap-accent-ink transition hover:-translate-y-px hover:bg-ap-accent/85 active:translate-y-0 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
               >
-                {loading ? 'Saving…' : (
+                {loading ? (
+                  'Saving…'
+                ) : (
                   <>
                     Let's go
                     <ArrowRight size={17} />
