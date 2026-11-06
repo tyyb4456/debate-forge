@@ -92,7 +92,7 @@ function PreviousDebatesSidebar({ isOpen, onClose, onSelectDebate }) {
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 30, stiffness: 240 }}
-            className="fixed right-0 top-0 z-[80] flex h-full w-full max-w-[420px] flex-col overflow-hidden border-l border-ap-line bg-ap-bg font-sans text-ap-ink max-[480px]:max-w-full"
+            className="fixed right-0 top-0 z-[80] flex h-full w-full max-w-[420px] flex-col overflow-hidden rounded-l-[2rem] border-l border-ap-line bg-ap-bg font-sans text-ap-ink shadow-[-18px_0_46px_rgba(0,0,0,0.18)] max-[480px]:max-w-full max-[480px]:rounded-l-none"
           >
             {/* Header */}
             <div className="flex shrink-0 items-start justify-between gap-4 border-b border-ap-line px-5 pb-[18px] pt-[22px]">
@@ -109,7 +109,7 @@ function PreviousDebatesSidebar({ isOpen, onClose, onSelectDebate }) {
                 type="button"
                 onClick={onClose}
                 aria-label="Close history"
-                className="mt-0.5 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-ap-sm border border-ap-line bg-transparent text-ap-ink transition-colors hover:border-ap-line-strong hover:bg-ap-ink/5"
+                className="clay-icon mt-0.5 inline-flex h-10 w-10 shrink-0 items-center justify-center text-ap-ink"
               >
                 <X size={18} />
               </button>
@@ -128,14 +128,14 @@ function PreviousDebatesSidebar({ isOpen, onClose, onSelectDebate }) {
                   <button
                     type="button"
                     onClick={fetchDebates}
-                    className="inline-flex h-[38px] items-center justify-center gap-2 rounded-ap border border-transparent bg-ap-accent px-4 text-sm font-semibold text-ap-accent-ink transition hover:bg-ap-accent/85"
+                    className="clay-btn clay-btn-accent inline-flex h-[38px] items-center justify-center gap-2 px-4 text-sm font-semibold text-ap-accent-ink hover:bg-ap-accent/85"
                   >
                     Retry
                   </button>
                 </div>
               ) : debates.length === 0 ? (
                 <div className="flex h-full flex-col items-center justify-center gap-2.5 text-center">
-                  <div className="mb-1 inline-flex h-12 w-12 items-center justify-center rounded-ap-sm border border-ap-line bg-ap-surface-2 text-ap-muted">
+                  <div className="clay-sm mb-1 inline-flex h-12 w-12 items-center justify-center text-ap-muted">
                     <MessageSquare size={24} />
                   </div>
                   <p className="text-[15px] font-semibold text-ap-ink">No debates yet</p>
@@ -156,7 +156,7 @@ function PreviousDebatesSidebar({ isOpen, onClose, onSelectDebate }) {
                         initial={{ opacity: 0, y: 12 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.05 }}
-                        className="group cursor-pointer rounded-ap border border-ap-line bg-ap-surface p-3.5 transition hover:-translate-y-px hover:border-ap-line-strong"
+                        className="clay clay-interactive group cursor-pointer p-3.5"
                         onClick={() => handleResumeDebate(debate)}
                       >
                         <div className="flex items-center justify-between gap-2.5">
@@ -178,7 +178,7 @@ function PreviousDebatesSidebar({ isOpen, onClose, onSelectDebate }) {
 
                         <div className="mt-2.5 flex items-center justify-between gap-2.5">
                           <div className="flex flex-wrap items-center gap-1.5">
-                            <span className="inline-flex h-6 items-center rounded-ap-sm border border-ap-line px-2.5 text-[11px] font-semibold capitalize text-ap-ink-soft">
+                            <span className="clay-pill inline-flex h-6 items-center px-2.5 text-[11px] font-semibold capitalize text-ap-ink-soft">
                               {debate.difficulty || 'standard'}
                             </span>
                             <span className="text-[11px] text-ap-muted">

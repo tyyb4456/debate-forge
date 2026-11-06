@@ -66,13 +66,13 @@ const CONTAINER =
   'mx-auto w-full max-w-[1200px] px-[clamp(20px,4vw,56px)]';
 
 const BTN =
-  'inline-flex h-[52px] items-center justify-center gap-2.5 rounded-[3px] border border-transparent bg-ap-accent px-[26px] text-ap-body font-semibold leading-none text-ap-accent-ink transition hover:-translate-y-px hover:bg-ap-accent/85 active:translate-y-0 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-55 max-[520px]:w-full';
+  'clay-btn clay-btn-accent inline-flex h-[52px] items-center justify-center gap-2.5 px-[26px] text-ap-body font-semibold leading-none text-ap-accent-ink hover:bg-ap-accent/85 disabled:cursor-not-allowed disabled:opacity-55 max-[520px]:w-full';
 
 const BTN_GHOST =
-  'inline-flex h-[52px] items-center justify-center gap-2.5 rounded-[3px] border border-ap-line bg-transparent px-6 text-ap-body font-medium leading-none text-ap-ink transition hover:-translate-y-px hover:border-ap-line-strong hover:bg-ap-ink/5 active:translate-y-0 active:scale-[0.99] max-[520px]:w-full';
+  'clay-btn clay-btn-ghost inline-flex h-[52px] items-center justify-center gap-2.5 px-6 text-ap-body font-medium leading-none text-ap-ink hover:bg-ap-ink/5 max-[520px]:w-full';
 
 const ICON_BTN =
-  'inline-flex h-10 w-10 items-center justify-center rounded-[3px] border border-ap-line bg-transparent text-ap-ink transition-colors hover:border-ap-line-strong hover:bg-ap-ink/5 max-[520px]:h-[38px] max-[520px]:w-[38px]';
+  'clay-icon inline-flex h-10 w-10 items-center justify-center text-ap-ink max-[520px]:h-[38px] max-[520px]:w-[38px]';
 
 const SECTION_TITLE =
   'm-0 text-ap-head font-bold leading-[0.98] tracking-[-0.035em]';
@@ -179,7 +179,7 @@ function Landing() {
             className="inline-flex cursor-pointer items-center gap-2.5 border-0 bg-transparent p-0 text-ap-lead font-bold tracking-[-0.025em] text-ap-ink"
           >
             <span
-              className="grid h-[30px] w-[30px] place-items-center rounded-[3px] bg-ap-accent text-sm font-bold leading-none text-ap-accent-ink"
+              className="clay-accent grid h-[30px] w-[30px] place-items-center text-sm font-bold leading-none text-ap-accent-ink"
               aria-hidden="true"
             >
               D
@@ -223,7 +223,7 @@ function Landing() {
             <button
               type="button"
               onClick={focusArena}
-              className="inline-flex h-10 cursor-pointer items-center justify-center gap-2 rounded-[3px] border border-transparent bg-ap-accent px-[18px] text-ap-body font-semibold leading-none text-ap-accent-ink transition hover:-translate-y-px hover:bg-ap-accent/85 active:translate-y-0 max-[760px]:hidden"
+              className="clay-btn clay-btn-accent inline-flex h-10 cursor-pointer items-center justify-center gap-2 px-[18px] text-ap-body font-semibold leading-none text-ap-accent-ink hover:bg-ap-accent/85 max-[760px]:hidden"
             >
               Start
               <ArrowRight size={15} />
@@ -297,7 +297,7 @@ function Landing() {
                   })}
             >
               <div
-                className="w-full max-w-[468px] overflow-hidden rounded-[4px] bg-ap-panel text-ap-panel-ink min-[980px]:ml-auto max-[980px]:max-w-[560px]"
+                className="clay-panel w-full max-w-[468px] overflow-hidden text-ap-panel-ink min-[980px]:ml-auto max-[980px]:max-w-[560px]"
                 data-ui
               >
                 <div className="flex h-2.5" aria-hidden="true">
@@ -346,7 +346,7 @@ function Landing() {
                         if (error) setError('');
                       }}
                       placeholder="e.g. AI will replace most jobs by 2040"
-                      className="h-[52px] w-full rounded-[3px] border border-ap-panel-line bg-ap-panel-2 px-4 text-ap-body font-medium text-ap-panel-ink outline-none transition-colors placeholder:font-normal placeholder:text-ap-panel-muted focus:border-ap-accent"
+                      className="clay-inset-dark h-[52px] w-full px-4 text-ap-body font-medium text-ap-panel-ink outline-none transition-colors placeholder:font-normal placeholder:text-ap-panel-muted focus:border-ap-accent"
                       autoComplete="off"
                       aria-invalid={Boolean(error)}
                       aria-describedby={error ? 'lp-motion-error' : undefined}
@@ -373,7 +373,7 @@ function Landing() {
                         Intensity
                       </span>
                       <div
-                        className="grid grid-cols-3 gap-1 rounded-[3px] border border-ap-panel-line bg-ap-panel-2 p-1"
+                        className="clay-inset-dark grid grid-cols-3 gap-1 p-1.5"
                         role="group"
                         aria-labelledby="lp-intensity-label"
                       >
@@ -385,10 +385,10 @@ function Landing() {
                               type="button"
                               onClick={() => setDifficulty(level.id)}
                               aria-pressed={active}
-                              className={`h-10 cursor-pointer rounded-[2px] text-sm transition-colors ${
+                              className={`h-10 cursor-pointer rounded-ap-sm text-sm transition-colors ${
                                 active
-                                  ? 'bg-ap-accent font-semibold text-ap-accent-ink'
-                                  : 'bg-transparent font-medium text-ap-panel-muted hover:text-ap-panel-ink'
+                                  ? 'clay-btn-accent bg-ap-accent font-semibold text-ap-accent-ink'
+                                  : 'font-medium text-ap-panel-muted hover:bg-white/5 hover:text-ap-panel-ink'
                               }`}
                             >
                               {level.label}
@@ -471,7 +471,7 @@ function Landing() {
               {AGENTS.map((agent, i) => (
                 <Motion.article
                   key={agent.title}
-                  className="grid grid-cols-[108px_minmax(0,1fr)] gap-6 py-[30px] first:pt-0 max-[760px]:grid-cols-1 max-[760px]:gap-2 max-[760px]:py-[26px]"
+                  className="clay clay-interactive mb-3 grid grid-cols-[108px_minmax(0,1fr)] gap-6 px-6 py-6 max-[760px]:grid-cols-1 max-[760px]:gap-2 max-[760px]:py-5"
                   {...reveal(i * 0.06, 0.3)}
                 >
                   <span className="pt-1 text-sm leading-snug text-ap-muted max-[760px]:pt-0">
@@ -511,7 +511,7 @@ function Landing() {
 
             <div className="grid gap-4 min-[980px]:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
               <Motion.div
-                className="flex min-h-[260px] flex-col rounded-[4px] border border-ap-panel-line bg-ap-panel p-[clamp(20px,2.4vw,28px)] text-ap-panel-ink"
+                className="flex min-h-[260px] flex-col clay-panel p-[clamp(20px,2.4vw,28px)] text-ap-panel-ink"
                 data-ui
                 {...reveal(0, 0.2)}
               >
@@ -527,14 +527,14 @@ function Landing() {
                 </p>
                 <div className="mt-auto flex items-center justify-between gap-4 pt-7 text-sm text-ap-panel-muted">
                   <span>Your turn</span>
-                  <span className="max-w-[220px] flex-1 rounded-[3px] border border-ap-panel-line bg-ap-panel-2 px-3.5 py-3 text-sm text-ap-panel-muted max-[760px]:max-w-none">
+                  <span className="clay-inset-dark max-w-[220px] flex-1 px-3.5 py-3 text-sm text-ap-panel-muted max-[760px]:max-w-none">
                     Type your response…
                   </span>
                 </div>
               </Motion.div>
 
               <Motion.div
-                className="flex min-h-[260px] flex-col rounded-[4px] border border-ap-panel-line bg-ap-panel p-[clamp(20px,2.4vw,28px)] text-ap-panel-ink"
+                className="flex min-h-[260px] flex-col clay-panel p-[clamp(20px,2.4vw,28px)] text-ap-panel-ink"
                 data-ui
                 {...reveal(0.08, 0.2)}
               >
@@ -552,7 +552,7 @@ function Landing() {
                   , but your evidence covers only manufacturing.
                 </p>
                 <div className="mt-auto flex flex-wrap items-center gap-3 pt-6 text-sm text-ap-panel-muted">
-                  <span className="rounded-[2px] bg-ap-accent px-2 py-1 font-semibold text-ap-accent-ink">
+                  <span className="clay-accent bg-ap-accent px-2.5 py-1.5 font-semibold text-ap-accent-ink">
                     Unsupported scope
                   </span>
                   <span>Evidence 5 / 10</span>
@@ -560,7 +560,7 @@ function Landing() {
               </Motion.div>
 
               <Motion.div
-                className="col-span-full grid min-h-[210px] items-center gap-[clamp(24px,4vw,48px)] rounded-[4px] border border-ap-panel-line bg-ap-panel p-[clamp(20px,2.4vw,28px)] text-ap-panel-ink min-[980px]:grid-cols-[auto_minmax(0,1fr)_220px] max-[980px]:grid-cols-[auto_minmax(0,1fr)] max-[760px]:grid-cols-1 max-[760px]:gap-6"
+                className="col-span-full grid min-h-[210px] items-center gap-[clamp(24px,4vw,48px)] clay-panel p-[clamp(20px,2.4vw,28px)] text-ap-panel-ink min-[980px]:grid-cols-[auto_minmax(0,1fr)_220px] max-[980px]:grid-cols-[auto_minmax(0,1fr)] max-[760px]:grid-cols-1 max-[760px]:gap-6"
                 data-ui
                 {...reveal(0.12, 0.2)}
               >
@@ -581,9 +581,9 @@ function Landing() {
                       key={label}
                     >
                       <span>{label}</span>
-                      <span className="block h-1.5 bg-ap-panel-2">
+                      <span className="clay-track-dark block h-2">
                         <span
-                          className="block h-full bg-ap-accent"
+                          className="block h-full rounded-full bg-ap-accent"
                           style={{ width: `${value * 10}%` }}
                         />
                       </span>
@@ -629,7 +629,7 @@ function Landing() {
               {STEPS.map((step, i) => (
                 <Motion.div
                   key={step.title}
-                  className="pt-6 max-[760px]:pt-0"
+                  className="clay clay-interactive bg-white p-6 max-[760px]:p-5"
                   {...reveal(i * 0.08, 0.35)}
                 >
                   <div className="mb-5 h-2.5 w-2.5 bg-ap-accent-ink max-[760px]:mb-3.5" aria-hidden="true" />

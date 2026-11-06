@@ -32,10 +32,10 @@ const KICKER =
   'text-[11px] font-semibold uppercase leading-tight tracking-[0.18em] text-ap-muted';
 
 const BTN =
-  'inline-flex items-center justify-center gap-2 rounded-ap border border-transparent bg-ap-accent px-5 font-semibold leading-none text-ap-accent-ink transition hover:-translate-y-px hover:bg-ap-accent/85 active:translate-y-0 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50';
+  'clay-btn clay-btn-accent inline-flex items-center justify-center gap-2 px-5 font-semibold leading-none text-ap-accent-ink hover:bg-ap-accent/85 disabled:cursor-not-allowed disabled:opacity-50';
 
 const BTN_GHOST =
-  'inline-flex items-center justify-center gap-2 rounded-ap border border-ap-line px-4 font-medium leading-none text-ap-ink transition hover:-translate-y-px hover:border-ap-line-strong hover:bg-ap-ink/5 disabled:cursor-not-allowed disabled:opacity-50';
+  'clay-btn clay-btn-ghost inline-flex items-center justify-center gap-2 px-4 font-medium leading-none text-ap-ink hover:bg-ap-ink/5 disabled:cursor-not-allowed disabled:opacity-50';
 
 // ─── Badge icon map ───────────────────────────────────────────────────────────
 const BADGE_ICONS = {
@@ -86,7 +86,7 @@ function MiniBarChart({ data }) {
             key={i}
             className="group relative flex h-full flex-1 items-end justify-center"
           >
-            <div className="pointer-events-none absolute bottom-[calc(100%_+_8px)] left-1/2 z-[5] -translate-x-1/2 whitespace-nowrap rounded-ap-sm border border-ap-line bg-ap-panel px-2.5 py-1.5 text-[11px] leading-snug text-ap-panel-ink opacity-0 transition-opacity group-hover:opacity-100">
+            <div className="pointer-events-none absolute bottom-[calc(100%_+_8px)] left-1/2 z-[5] -translate-x-1/2 whitespace-nowrap clay-panel-sm px-2.5 py-1.5 text-[11px] leading-snug text-ap-panel-ink opacity-0 transition-opacity group-hover:opacity-100">
               {d.topic?.length > 20 ? d.topic.slice(0, 20) + '…' : d.topic}
               <br />
               {strength != null ? `Strength: ${strength.toFixed(1)}` : 'No data'}
@@ -112,12 +112,12 @@ function StatCard({ label, value, sub, icon: Icon, accent = PRIMARY }) {
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      className="flex flex-col gap-2.5 rounded-ap border border-ap-line bg-ap-surface p-[18px]"
+      className="clay clay-interactive flex flex-col gap-2.5 p-[18px]"
     >
       <div className="flex items-center justify-between gap-2">
         <p className={KICKER}>{label}</p>
         <div
-          className="inline-flex h-[26px] w-[26px] items-center justify-center rounded-ap-sm border border-ap-line"
+          className="clay-sm inline-flex h-[26px] w-[26px] items-center justify-center"
           style={{ color: accent }}
         >
           <Icon size={14} />
@@ -172,7 +172,7 @@ function SkillRing({ skill = 0.5, label = 'Intermediate' }) {
           </span>
         </div>
       </div>
-      <span className="rounded-ap-sm border border-ap-panel-ink/20 px-2.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-ap-panel-ink">
+      <span className="clay-pill border border-ap-panel-ink/20 px-2.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-ap-panel-ink">
         {label}
       </span>
     </div>
@@ -201,7 +201,7 @@ function PerfBreakdown({ breakdown }) {
             <span className="w-[66px] shrink-0 text-sm font-medium text-ap-ink-soft">
               {label}
             </span>
-            <div className="h-1.5 flex-1 overflow-hidden rounded-full border border-ap-line bg-ap-surface-2">
+            <div className="clay-track h-2 flex-1 overflow-hidden">
               <motion.div
                 className="h-full rounded-full"
                 initial={{ width: 0 }}
@@ -267,8 +267,8 @@ export default function Profile() {
   if (error)
     return (
       <div className="flex min-h-svh items-center justify-center bg-ap-bg p-6 font-sans text-ap-ink">
-        <div className="w-full max-w-[380px] rounded-ap border border-ap-line bg-ap-surface p-8 text-center">
-          <div className="mx-auto mb-4 inline-flex h-12 w-12 items-center justify-center rounded-ap-sm bg-ap-panel text-2xl font-bold text-ap-panel-ink">
+        <div className="clay w-full max-w-[380px] p-8 text-center">
+          <div className="mx-auto mb-4 clay-panel-sm inline-flex h-12 w-12 items-center justify-center text-2xl font-bold text-ap-panel-ink">
             !
           </div>
           <p className="text-2xl font-bold tracking-[-0.035em]">Oops</p>
@@ -328,7 +328,7 @@ export default function Profile() {
               onClick={() => navigate('/')}
               className="hidden items-center gap-2.5 text-lg font-bold tracking-[-0.025em] text-ap-ink sm:inline-flex"
             >
-              <span className="inline-flex h-[26px] w-[26px] items-center justify-center rounded-ap-sm bg-ap-accent text-[13px] font-bold text-ap-accent-ink">
+              <span className="clay-accent inline-flex h-[26px] w-[26px] items-center justify-center text-[13px] font-bold text-ap-accent-ink">
                 D
               </span>
               DebateAI
@@ -349,10 +349,10 @@ export default function Profile() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.08 }}
-          className="grid overflow-hidden rounded-ap border border-ap-line bg-ap-surface min-[900px]:grid-cols-[minmax(0,1.55fr)_minmax(240px,0.75fr)]"
+          className="clay grid overflow-hidden min-[900px]:grid-cols-[minmax(0,1.55fr)_minmax(240px,0.75fr)]"
         >
           <div className="flex min-w-0 items-center gap-5 p-6 sm:p-9 max-[700px]:flex-col max-[700px]:items-start">
-            <div className="inline-flex h-[76px] w-[76px] shrink-0 items-center justify-center rounded-ap-sm bg-ap-panel text-3xl font-bold tracking-[-0.03em] text-ap-panel-ink">
+            <div className="clay-panel-sm inline-flex h-[76px] w-[76px] shrink-0 items-center justify-center text-3xl font-bold tracking-[-0.03em] text-ap-panel-ink">
               {(user.username || 'D').charAt(0).toUpperCase()}
             </div>
 
@@ -369,7 +369,7 @@ export default function Profile() {
                       if (e.key === 'Enter') handleSaveName();
                       if (e.key === 'Escape') setEditingName(false);
                     }}
-                    className="h-[38px] w-[190px] rounded-ap-sm border border-ap-line bg-ap-surface-2 px-3 text-sm font-semibold text-ap-ink outline-none transition-colors focus:border-ap-line-strong"
+                    className="clay-inset h-[38px] w-[190px] px-3 text-sm font-semibold text-ap-ink outline-none transition-colors focus:border-ap-line-strong"
                     maxLength={50}
                   />
                   <button
@@ -396,7 +396,7 @@ export default function Profile() {
                       setNameInput(user.username || '');
                       setEditingName(true);
                     }}
-                    className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-ap-sm border border-transparent text-ap-muted transition-colors hover:border-ap-line hover:text-ap-ink"
+                    className="clay-icon inline-flex h-7 w-7 shrink-0 items-center justify-center text-ap-muted hover:text-ap-ink"
                     title="Edit name"
                     aria-label="Edit name"
                   >
@@ -418,20 +418,19 @@ export default function Profile() {
             </div>
           </div>
 
-          <div className="flex items-center justify-center border-t border-ap-line bg-ap-panel p-6 text-ap-panel-ink min-[900px]:border-l min-[900px]:border-t-0">
+          <div className="clay-panel-sm flex items-center justify-center rounded-none border-t border-ap-line p-6 text-ap-panel-ink min-[900px]:border-l min-[900px]:border-t-0">
             <SkillRing skill={user.current_skill_level} label={user.skill_label} />
           </div>
         </motion.div>
 
         {/* ── Tabs ── */}
-        <div className="my-7 flex gap-1 rounded-ap border border-ap-line bg-ap-surface p-1">
+        <div className="clay-inset my-7 flex gap-1 p-1.5">
           {tabs.map((t) => (
             <button
               key={t}
               onClick={() => setActiveTab(t)}
-              className={`h-[38px] flex-1 rounded-ap-sm border border-transparent px-3 text-[11px] font-semibold uppercase tracking-[0.1em] transition-colors max-[480px]:px-1.5 max-[480px]:text-[10px] ${
-                activeTab === t
-                  ? 'bg-ap-panel text-ap-panel-ink'
+              className={`h-[38px] flex-1 rounded-ap-sm px-3 text-[11px] font-semibold uppercase tracking-[0.1em] transition-colors max-[480px]:px-1.5 max-[480px]:text-[10px] ${
+                activeTab === t ? 'clay-panel-sm bg-ap-panel text-ap-panel-ink'
                   : 'text-ap-muted hover:text-ap-ink'
               }`}
             >
@@ -483,12 +482,12 @@ export default function Profile() {
               </div>
 
               <div className="grid gap-4 min-[900px]:grid-cols-2">
-                <div className="rounded-ap border border-ap-line bg-ap-surface p-5">
+                <div className="clay p-5">
                   <p className={`${KICKER} mb-4`}>Performance breakdown</p>
                   <PerfBreakdown breakdown={stats.performance_breakdown} />
                 </div>
 
-                <div className="flex flex-col rounded-ap border border-ap-line bg-ap-surface p-5">
+                <div className="flex flex-col clay p-5">
                   <p className={`${KICKER} mb-4`}>Skill trend</p>
                   <div className="flex items-center gap-2.5">
                     <TrendIcon trend={stats.skill_trend} />
@@ -533,7 +532,7 @@ export default function Profile() {
                 </div>
               </div>
 
-              <div className="rounded-ap border border-ap-line bg-ap-surface p-5">
+              <div className="clay p-5">
                 <p className={`${KICKER} mb-4`}>Argument strength over time</p>
                 <MiniBarChart data={growth_trajectory} />
                 <p className="mt-3.5 text-right text-[11px] text-ap-muted">
@@ -552,8 +551,8 @@ export default function Profile() {
               exit={{ opacity: 0, y: -8 }}
             >
               {achievements.list.length === 0 ? (
-                <div className="flex flex-col items-center gap-2.5 rounded-ap border border-ap-line bg-ap-surface px-6 py-14 text-center">
-                  <div className="mb-1 inline-flex h-[52px] w-[52px] items-center justify-center rounded-ap-sm border border-ap-line bg-ap-surface-2 text-ap-gold">
+                <div className="clay flex flex-col items-center gap-2.5 px-6 py-14 text-center">
+                  <div className="mb-1 clay-sm inline-flex h-[52px] w-[52px] items-center justify-center text-ap-gold">
                     <Star size={26} />
                   </div>
                   <p className="text-xl font-bold tracking-[-0.03em] text-ap-ink">
@@ -581,10 +580,10 @@ export default function Profile() {
                         initial={{ opacity: 0, scale: 0.97 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ delay: i * 0.05 }}
-                        className="flex items-start gap-3.5 rounded-ap border border-ap-line bg-ap-surface p-[18px]"
+                        className="clay clay-interactive flex items-start gap-3.5 p-[18px]"
                       >
                         <div
-                          className="inline-flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-ap-sm border border-ap-line bg-ap-surface-2"
+                          className="clay-sm inline-flex h-[42px] w-[42px] shrink-0 items-center justify-center"
                           style={{ color: cfg.color }}
                         >
                           <Icon size={22} />
@@ -623,7 +622,7 @@ export default function Profile() {
               className="flex flex-col gap-2.5"
             >
               {recent_debates.length === 0 ? (
-                <div className="rounded-ap border border-ap-line bg-ap-surface px-6 py-14 text-center">
+                <div className="clay px-6 py-14 text-center">
                   <p className="text-xl font-bold tracking-[-0.03em] text-ap-muted">
                     No debates yet
                   </p>
@@ -657,7 +656,7 @@ export default function Profile() {
                           },
                         })
                       }
-                      className="flex cursor-pointer items-center gap-3.5 rounded-ap border border-ap-line bg-ap-surface px-4 py-4 transition hover:-translate-y-px hover:border-ap-line-strong max-[700px]:gap-2.5 max-[700px]:px-3.5"
+                      className="clay clay-interactive flex cursor-pointer items-center gap-3.5 px-4 py-4 max-[700px]:gap-2.5 max-[700px]:px-3.5"
                     >
                       <div
                         className="h-2 w-2 shrink-0 rounded-full"
@@ -669,7 +668,7 @@ export default function Profile() {
                           {d.topic}
                         </p>
                         <div className="mt-1.5 flex flex-wrap items-center gap-x-2.5 gap-y-1.5">
-                          <span className="inline-flex h-6 items-center rounded-ap-sm border border-ap-line px-2.5 text-[11px] font-semibold capitalize text-ap-ink-soft">
+                          <span className="clay-pill inline-flex h-6 items-center px-2.5 text-[11px] font-semibold capitalize text-ap-ink-soft">
                             {d.difficulty}
                           </span>
                           {isActive ? (

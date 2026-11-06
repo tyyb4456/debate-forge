@@ -23,13 +23,13 @@ import PreviousDebatesSidebar from '../components/PreviousDebatesSidebar';
 import ThemeToggle from '../components/ThemeToggle';
 
 const BTN =
-  'inline-flex items-center justify-center gap-2 rounded-ap border border-transparent bg-ap-accent px-5 font-semibold leading-none text-ap-accent-ink transition hover:-translate-y-px hover:bg-ap-accent/85 active:translate-y-0 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50';
+  'clay-btn clay-btn-accent inline-flex items-center justify-center gap-2 px-5 font-semibold leading-none text-ap-accent-ink hover:bg-ap-accent/85 disabled:cursor-not-allowed disabled:opacity-50';
 
 const BTN_GHOST =
-  'inline-flex items-center justify-center gap-2 rounded-ap border border-ap-line px-4 font-medium leading-none text-ap-ink transition hover:-translate-y-px hover:border-ap-line-strong hover:bg-ap-ink/5 disabled:cursor-not-allowed disabled:opacity-50';
+  'clay-btn clay-btn-ghost inline-flex items-center justify-center gap-2 px-4 font-medium leading-none text-ap-ink hover:bg-ap-ink/5 disabled:cursor-not-allowed disabled:opacity-50';
 
 const CHIP =
-  'inline-flex h-6 items-center gap-1.5 whitespace-nowrap rounded-ap-sm border border-ap-line px-2.5 text-[11px] font-semibold text-ap-ink-soft';
+  'clay-pill inline-flex h-6 items-center gap-1.5 whitespace-nowrap px-2.5 text-[11px] font-semibold text-ap-ink-soft';
 
 const KICKER =
   'text-[11px] font-semibold uppercase leading-tight tracking-[0.18em] text-ap-muted';
@@ -102,7 +102,7 @@ function MarkdownMessage({ content }) {
           </h5>
         ),
         pre: ({ children }) => (
-          <pre className="my-2.5 overflow-x-auto rounded-ap-sm border border-ap-line bg-ap-surface-2 p-3.5">
+          <pre className="clay-sm my-2.5 overflow-x-auto p-3.5">
             {children}
           </pre>
         ),
@@ -111,7 +111,7 @@ function MarkdownMessage({ content }) {
             className={
               /language-/.test(className || '')
                 ? 'font-mono text-[0.82em] leading-relaxed text-ap-ink-soft'
-                : 'rounded-ap-sm border border-ap-line bg-ap-surface-2 px-1.5 py-0.5 font-mono text-[0.82em] text-ap-ink'
+                : 'clay-pill px-1.5 py-0.5 font-mono text-[0.82em] text-ap-ink'
             }
           >
             {children}
@@ -177,10 +177,10 @@ function MessageInsights({ insights }) {
               type="button"
               onClick={() => setOpenAgent(isOpen ? null : agent)}
               whileTap={{ scale: 0.98 }}
-              className={`inline-flex h-7 items-center gap-1.5 rounded-ap-sm border px-2.5 text-[11px] font-semibold transition-colors ${
+              className={`clay-pill inline-flex h-7 items-center gap-1.5 px-2.5 text-[11px] font-semibold transition-colors ${
                 isOpen
                   ? 'border-transparent bg-ap-panel text-ap-panel-ink'
-                  : 'border-ap-line bg-transparent text-ap-ink-soft hover:border-ap-line-strong'
+                  : 'border-ap-line text-ap-ink-soft hover:border-ap-line-strong'
               }`}
             >
               <Icon size={11} style={{ color: isOpen ? 'currentColor' : cfg.color }} />
@@ -208,7 +208,7 @@ function MessageInsights({ insights }) {
             className="overflow-hidden"
           >
             <div
-              className="mt-2 rounded-ap-sm border border-ap-line border-l-2 bg-ap-surface p-4"
+              className="clay mt-2 border-l p-4"
               style={{ borderLeftColor: AGENT_CONFIG[openAgent]?.color }}
             >
               {openAgent === 'analyzer' && <AnalyzerDetail output={insights.analyzer} />}
@@ -281,7 +281,7 @@ function AnalyzerDetail({ output }) {
           {data.fallacies_detected.map((f, i) => (
             <div
               key={i}
-              className="mb-1.5 rounded-ap-sm border border-ap-line bg-ap-surface-2 px-3 py-2.5 last:mb-0"
+              className="clay-sm mb-1.5 px-3 py-2.5 last:mb-0"
             >
               <p className="text-sm font-semibold capitalize text-ap-ink">
                 {f.type?.replace(/_/g, ' ')}
@@ -365,7 +365,7 @@ function ResearcherDetail({ output }) {
           {supporting.slice(0, 2).map((ev, i) => (
             <div
               key={i}
-              className="mb-1.5 rounded-ap-sm border border-ap-line bg-ap-mint-soft px-3 py-2.5 last:mb-0"
+              className="mb-1.5 clay-sm bg-ap-mint-soft px-3 py-2.5 last:mb-0"
             >
               <p className="text-sm font-semibold text-ap-ink">{ev.source_name}</p>
               {ev.key_finding && (
@@ -386,7 +386,7 @@ function ResearcherDetail({ output }) {
           {opposing.slice(0, 2).map((ev, i) => (
             <div
               key={i}
-              className="mb-1.5 rounded-ap-sm border border-ap-line bg-ap-peach-soft px-3 py-2.5 last:mb-0"
+              className="mb-1.5 clay-sm bg-ap-peach-soft px-3 py-2.5 last:mb-0"
             >
               <p className="text-sm font-semibold text-ap-ink">{ev.source_name}</p>
               {ev.key_finding && (
@@ -414,7 +414,7 @@ function SocraticDetail({ output }) {
       {data.questions?.map((q, i) => (
         <div
           key={i}
-          className="mb-1.5 rounded-ap-sm border border-ap-line bg-ap-surface-2 px-3 py-2.5 last:mb-0"
+          className="clay-sm mb-1.5 px-3 py-2.5 last:mb-0"
         >
           <p className="text-sm font-semibold text-ap-ink">{q.question_text || q}</p>
           {q.question_type && (
@@ -438,7 +438,7 @@ function AdvocateDetail({ output }) {
   return (
     <div>
       {data.opposing_position && (
-        <div className="mb-1.5 rounded-ap-sm border border-ap-line bg-ap-peach-soft px-3 py-2.5">
+        <div className="mb-1.5 clay-sm bg-ap-peach-soft px-3 py-2.5">
           <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-ap-muted">
             Counter-position
           </p>
@@ -450,7 +450,7 @@ function AdvocateDetail({ output }) {
       {data.counter_arguments?.slice(0, 2).map((arg, i) => (
         <div
           key={i}
-          className="mb-1.5 rounded-ap-sm border border-ap-line bg-ap-peach-soft px-3 py-2.5 last:mb-0"
+          className="mb-1.5 clay-sm bg-ap-peach-soft px-3 py-2.5 last:mb-0"
         >
           <p className="text-sm font-semibold capitalize text-ap-ink">
             {arg.type?.replace(/_/g, ' ')}
@@ -645,7 +645,7 @@ function Debate() {
               onClick={() => navigate('/')}
               aria-label="Back to DebateAI home"
             >
-              <span className="inline-flex h-[26px] w-[26px] items-center justify-center rounded-ap-sm bg-ap-accent text-[13px] font-bold text-ap-accent-ink">
+              <span className="clay-accent inline-flex h-[26px] w-[26px] items-center justify-center text-[13px] font-bold text-ap-accent-ink">
                 D
               </span>
               <span className="max-[700px]:hidden">DebateAI</span>
@@ -676,7 +676,7 @@ function Debate() {
                       initial={{ opacity: 0, x: -6 }}
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: -6 }}
-                      className="inline-flex h-6 items-center gap-1.5 whitespace-nowrap rounded-ap-sm border border-ap-mint/35 bg-ap-mint/10 px-2.5 text-[11px] font-semibold text-ap-mint"
+                      className="clay-pill inline-flex h-6 items-center gap-1.5 whitespace-nowrap border border-ap-mint/35 bg-ap-mint/10 px-2.5 text-[11px] font-semibold text-ap-mint"
                     >
                       <motion.span
                         className="h-1.5 w-1.5 rounded-full bg-current"
@@ -695,7 +695,7 @@ function Debate() {
             <ThemeToggle />
             <button
               type="button"
-              className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-ap-sm border border-ap-line bg-transparent text-ap-ink transition-colors hover:border-ap-line-strong hover:bg-ap-ink/5"
+              className="clay-icon inline-flex h-10 w-10 shrink-0 items-center justify-center text-ap-ink"
               onClick={() => setIsHistoryOpen(true)}
               aria-label="Debate history"
               title="Debate history"
@@ -737,7 +737,7 @@ function Debate() {
                     <button
                       key={starter}
                       type="button"
-                      className="inline-flex w-full items-center gap-2 rounded-ap-sm border border-ap-line px-3.5 py-2.5 text-left text-sm leading-snug text-ap-ink-soft transition-colors hover:border-ap-line-strong hover:bg-ap-ink/5 hover:text-ap-ink sm:w-auto"
+                      className="inline-flex w-full items-center gap-2 clay-sm px-3.5 py-2.5 text-left text-sm leading-snug text-ap-ink-soft transition-colors hover:bg-ap-ink/5 hover:text-ap-ink sm:w-auto"
                       onClick={() => applyStarter(starter)}
                     >
                       <span className="tabular-nums text-ap-muted">0{i + 1}</span>
@@ -761,7 +761,7 @@ function Debate() {
                   }`}
                 >
                   {msg.role === 'assistant' && (
-                    <div className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-ap-sm border border-transparent bg-ap-panel text-[10px] font-bold tracking-[0.08em] text-ap-panel-ink">
+                    <div className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center clay-panel-sm text-[10px] font-bold tracking-[0.08em] text-ap-panel-ink">
                       AI
                     </div>
                   )}
@@ -774,7 +774,7 @@ function Debate() {
                     }
                   >
                     {msg.role === 'assistant' ? (
-                      <div className="rounded-ap border border-ap-line bg-ap-surface px-5 py-4">
+                      <div className="clay px-5 py-4">
                         {msg.content ? (
                           <MarkdownMessage content={msg.content} />
                         ) : (
@@ -782,7 +782,7 @@ function Debate() {
                         )}
                       </div>
                     ) : (
-                      <div className="rounded-ap bg-ap-panel px-4 py-3 text-ap-panel-ink">
+                      <div className="clay-panel px-4 py-3 text-ap-panel-ink">
                         <p className="whitespace-pre-wrap text-[15px] leading-relaxed">
                           {msg.content}
                         </p>
@@ -794,7 +794,7 @@ function Debate() {
                   </div>
 
                   {msg.role === 'user' && (
-                    <div className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-ap-sm border border-ap-line bg-transparent text-[10px] font-bold tracking-[0.08em] text-ap-muted">
+                    <div className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center clay-sm text-[10px] font-bold tracking-[0.08em] text-ap-muted">
                       U
                     </div>
                   )}
@@ -809,10 +809,10 @@ function Debate() {
               animate={{ opacity: 1, y: 0 }}
               className="mb-6 flex items-center gap-3"
             >
-              <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-ap-sm border border-transparent bg-ap-panel text-[10px] font-bold tracking-[0.08em] text-ap-panel-ink">
+              <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center clay-panel-sm text-[10px] font-bold tracking-[0.08em] text-ap-panel-ink">
                 AI
               </div>
-              <div className="flex items-center gap-2.5 rounded-ap border border-ap-line bg-ap-surface px-4 py-3.5">
+              <div className="flex items-center gap-2.5 clay px-4 py-3.5">
                 <span className="flex gap-1">
                   {[0, 0.18, 0.36].map((d, i) => (
                     <motion.span
@@ -836,7 +836,7 @@ function Debate() {
 
       <div className="shrink-0 bg-ap-bg px-5 pb-[18px] pt-3 sm:px-8">
         <div className="mx-auto max-w-[860px]">
-          <div className="flex items-end gap-2.5 rounded-ap border border-ap-line bg-ap-surface p-2.5 transition-colors focus-within:border-ap-line-strong">
+          <div className="flex items-end gap-2.5 clay p-2.5 transition-colors focus-within:border-ap-line-strong">
             <textarea
               ref={inputRef}
               value={input}
@@ -916,9 +916,9 @@ function Debate() {
               exit={{ scale: 0.97, y: 12 }}
               transition={{ duration: 0.22 }}
               onClick={(e) => e.stopPropagation()}
-              className="max-h-[86vh] w-full max-w-[620px] overflow-y-auto rounded-ap border border-ap-line bg-ap-bg p-6 sm:p-9"
+              className="max-h-[86vh] w-full max-w-[620px] overflow-y-auto clay p-6 sm:p-9"
             >
-              <div className="mb-5 inline-flex h-10 w-10 items-center justify-center rounded-ap-sm bg-ap-accent text-ap-accent-ink">
+              <div className="clay-accent mb-5 inline-flex h-10 w-10 items-center justify-center text-ap-accent-ink">
                 <Zap size={18} />
               </div>
 
@@ -928,7 +928,7 @@ function Debate() {
               </h2>
 
               {feedback.session_summary && (
-                <div className="mt-6 rounded-ap-sm bg-ap-panel px-4 py-4 text-ap-panel-ink">
+                <div className="mt-6 clay-panel-sm px-4 py-4 text-ap-panel-ink">
                   <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-ap-panel-muted">
                     Overall performance
                   </p>
@@ -945,7 +945,7 @@ function Debate() {
                     {feedback.what_went_well.map((s, i) => (
                       <li
                         key={i}
-                        className="flex items-start gap-2.5 rounded-ap-sm border border-ap-line bg-ap-mint-soft px-3 py-2.5 text-sm leading-relaxed text-ap-ink-soft"
+                        className="flex items-start gap-2.5 clay-sm bg-ap-mint-soft px-3 py-2.5 text-sm leading-relaxed text-ap-ink-soft"
                       >
                         <span className="shrink-0 font-bold text-ap-mint">✓</span>
                         {s}
@@ -962,7 +962,7 @@ function Debate() {
                     {feedback.areas_for_improvement.map((a, i) => (
                       <li
                         key={i}
-                        className="flex items-start gap-2.5 rounded-ap-sm border border-ap-line bg-ap-peach-soft px-3 py-2.5 text-sm leading-relaxed text-ap-ink-soft"
+                        className="flex items-start gap-2.5 clay-sm bg-ap-peach-soft px-3 py-2.5 text-sm leading-relaxed text-ap-ink-soft"
                       >
                         <span className="shrink-0 font-bold text-ap-peach">→</span>
                         <span>

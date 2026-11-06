@@ -64,10 +64,10 @@ export default function NameSetupModal({ isOpen, onComplete }) {
             transition={{ type: 'spring', stiffness: 300, damping: 26 }}
             className="pointer-events-none fixed inset-0 z-50 flex items-center justify-center p-4"
           >
-            <div className="pointer-events-auto w-full max-w-[420px] rounded-ap border border-ap-line bg-ap-bg p-6 font-sans text-ap-ink sm:p-8">
-              <div className="relative mb-5 inline-flex h-16 w-16 items-center justify-center rounded-ap-sm bg-ap-panel text-2xl font-bold tracking-[-0.03em] text-ap-panel-ink">
+            <div className="clay pointer-events-auto w-full max-w-[420px] p-6 font-sans text-ap-ink sm:p-8">
+              <div className="clay-panel-sm relative mb-5 inline-flex h-16 w-16 items-center justify-center text-2xl font-bold tracking-[-0.03em] text-ap-panel-ink">
                 {name.trim().charAt(0).toUpperCase() || '?'}
-                <span className="absolute -right-[7px] -top-[7px] inline-flex h-6 w-6 items-center justify-center rounded-ap-sm bg-ap-accent text-ap-accent-ink">
+                <span className="clay-accent absolute -right-[7px] -top-[7px] inline-flex h-6 w-6 items-center justify-center text-ap-accent-ink">
                   <Sparkles size={13} />
                 </span>
               </div>
@@ -94,7 +94,7 @@ export default function NameSetupModal({ isOpen, onComplete }) {
                   placeholder="Enter your name…"
                   maxLength={50}
                   autoFocus
-                  className={`h-[46px] w-full rounded-ap-sm border bg-ap-surface-2 px-3.5 text-base font-medium text-ap-ink outline-none transition-colors placeholder:text-ap-muted focus:bg-ap-surface ${
+                  className={`clay-inset h-[46px] w-full px-3.5 text-base font-medium text-ap-ink outline-none transition-colors placeholder:text-ap-muted focus:bg-ap-surface ${
                     error
                       ? 'border-ap-danger'
                       : 'border-ap-line focus:border-ap-line-strong'
@@ -107,7 +107,7 @@ export default function NameSetupModal({ isOpen, onComplete }) {
                 type="button"
                 onClick={handleSubmit}
                 disabled={loading}
-                className="mt-4 inline-flex h-12 w-full items-center justify-center gap-2 rounded-ap border border-transparent bg-ap-accent px-5 text-[15px] font-semibold leading-none text-ap-accent-ink transition hover:-translate-y-px hover:bg-ap-accent/85 active:translate-y-0 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
+                className="clay-btn clay-btn-accent mt-4 inline-flex h-12 w-full items-center justify-center gap-2 px-5 text-[15px] font-semibold leading-none text-ap-accent-ink hover:bg-ap-accent/85 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {loading ? (
                   'Saving…'
