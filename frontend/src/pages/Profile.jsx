@@ -1,5 +1,4 @@
 // debate-ui/src/pages/Profile.jsx
-// Drop this file into debate-ui/src/pages/
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -22,19 +21,22 @@ import {
   ChevronRight,
   Pencil,
 } from 'lucide-react';
+import ThemeToggle from '../components/ThemeToggle';
 
-const CYPRUS = '#004643';
-const SAND = '#F0EDE5';
+const PRIMARY = 'var(--clay-primary)';
+const INK = 'var(--clay-ink)';
+const INK_SOFT = 'var(--clay-ink-soft)';
+const MUTED = 'var(--clay-muted)';
 const DUMMY_USER_ID = '8f3c2e7b-6b4a-4c9a-9e6f-2d5c1a8f7e42';
 const BASE = 'http://127.0.0.1:8000/api/user';
 
 // ─── Badge icon map ───────────────────────────────────────────────────────────
 const BADGE_ICONS = {
-  'Fallacy Hunter': { icon: Target, color: '#f59e0b' },
-  'Open Mind': { icon: Brain, color: '#8b5cf6' },
-  'Depth Seeker': { icon: BookOpen, color: '#3b82f6' },
-  'Marathon Debater': { icon: Flame, color: '#ef4444' },
-  default: { icon: Award, color: '#10b981' },
+  'Fallacy Hunter': { icon: Target, color: 'var(--clay-gold)' },
+  'Open Mind': { icon: Brain, color: 'var(--clay-primary)' },
+  'Depth Seeker': { icon: BookOpen, color: 'var(--clay-blue)' },
+  'Marathon Debater': { icon: Flame, color: 'var(--clay-peach)' },
+  default: { icon: Award, color: 'var(--clay-mint)' },
 };
 
 function getBadgeConfig(name) {
@@ -42,12 +44,10 @@ function getBadgeConfig(name) {
 }
 
 // ─── Tiny bar chart ───────────────────────────────────────────────────────────
-
-
 function MiniBarChart({ data }) {
   if (!data || data.length === 0)
     return (
-      <p className="text-sm" style={{ color: 'rgba(0,70,67,0.4)', fontFamily: "'DM Sans',sans-serif" }}>
+      <p className="text-sm" style={{ color: MUTED, fontFamily: 'inherit' }}>
         Not enough data yet.
       </p>
     );
@@ -55,29 +55,27 @@ function MiniBarChart({ data }) {
   const validData = data.filter((d) => d.argument_strength != null);
   if (validData.length === 0)
     return (
-      <p className="text-sm" style={{ color: 'rgba(0,70,67,0.4)', fontFamily: "'DM Sans',sans-serif" }}>
+      <p className="text-sm" style={{ color: MUTED, fontFamily: 'inherit' }}>
         No strength data recorded yet.
       </p>
     );
 
   const maxVal = Math.max(...data.map((d) => d.argument_strength || 0), 1);
-  const CHART_HEIGHT = 80; // px
+  const CHART_HEIGHT = 88;
 
   return (
-    <div style={{ display: 'flex', alignItems: 'flex-end', gap: '6px', height: `${CHART_HEIGHT}px` }}>
+    <div style={{ display: 'flex', alignItems: 'flex-end', gap: '7px', height: `${CHART_HEIGHT}px` }}>
       {data.map((d, i) => {
         const strength = d.argument_strength;
-        const barHeight = strength != null
-          ? Math.max((strength / maxVal) * CHART_HEIGHT, 4)
-          : 6;
+        const barHeight = strength != null ? Math.max((strength / maxVal) * CHART_HEIGHT, 5) : 7;
 
         const perf = d.performance;
         const color =
-          perf === 'excellent' ? '#10b981' :
-          perf === 'good'      ? '#60a5fa' :
-          perf === 'fair'      ? '#f59e0b' :
-          perf === 'poor'      ? '#f87171' :
-          'rgba(0,70,67,0.2)';
+          perf === 'excellent' ? 'var(--clay-mint)' :
+          perf === 'good'      ? 'var(--clay-blue)' :
+          perf === 'fair'      ? 'var(--clay-gold)' :
+          perf === 'poor'      ? 'var(--clay-peach)' :
+          'var(--clay-bg-deep)';
 
         return (
           <div
@@ -85,26 +83,25 @@ function MiniBarChart({ data }) {
             style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100%', justifyContent: 'flex-end', position: 'relative' }}
             className="group"
           >
-            {/* Tooltip */}
             <div
               style={{
                 position: 'absolute',
                 bottom: '100%',
                 left: '50%',
                 transform: 'translateX(-50%)',
-                marginBottom: '6px',
-                backgroundColor: 'white',
-                borderRadius: '8px',
-                padding: '4px 8px',
+                marginBottom: '8px',
+                backgroundColor: 'var(--tooltip-bg)',
+                borderRadius: '12px',
+                padding: '6px 10px',
                 fontSize: '11px',
-                color: '#004643',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.12)',
+                color: INK,
+                boxShadow: '0 8px 24px rgba(17,24,39,0.28)',
                 whiteSpace: 'nowrap',
                 pointerEvents: 'none',
                 opacity: 0,
                 transition: 'opacity 0.15s',
                 zIndex: 10,
-                fontFamily: "'DM Sans', sans-serif",
+                fontFamily: 'inherit',
               }}
               className="group-hover:opacity-100"
             >
@@ -113,14 +110,14 @@ function MiniBarChart({ data }) {
               {strength != null ? `Strength: ${strength.toFixed(1)}` : 'No data'}
             </div>
 
-            {/* Bar */}
             <div
               style={{
                 width: '100%',
                 height: `${barHeight}px`,
-                backgroundColor: strength != null ? color : 'rgba(0,70,67,0.12)',
-                borderRadius: '4px 4px 2px 2px',
+                backgroundColor: strength != null ? color : 'var(--clay-bg-deep)',
+                borderRadius: '8px 8px 4px 4px',
                 transition: 'height 0.6s ease',
+                boxShadow: strength != null ? '2px 2px 7px rgba(17,24,39,0.22)' : 'none',
               }}
             />
           </div>
@@ -129,37 +126,31 @@ function MiniBarChart({ data }) {
     </div>
   );
 }
+
 // ─── Stat card ────────────────────────────────────────────────────────────────
-function StatCard({ label, value, sub, icon: Icon, accent = CYPRUS }) {
+function StatCard({ label, value, sub, icon: Icon, accent = PRIMARY }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      className="rounded-2xl p-5 flex flex-col gap-2"
-      style={{ backgroundColor: 'rgba(0,70,67,0.05)', border: '1px solid rgba(0,70,67,0.1)' }}
+      className="clay-card-sm p-6 flex flex-col gap-2.5"
     >
       <div className="flex items-center justify-between">
-        <p
-          className="text-xs font-semibold uppercase tracking-widest"
-          style={{ color: 'rgba(0,70,67,0.5)', fontFamily: "'DM Sans',sans-serif" }}
-        >
+        <p className="text-[10px] font-bold uppercase tracking-[0.16em]" style={{ color: MUTED, fontFamily: 'inherit' }}>
           {label}
         </p>
         <div
-          className="w-7 h-7 rounded-lg flex items-center justify-center"
-          style={{ backgroundColor: `${accent}18` }}
+          className="w-8 h-8 rounded-xl flex items-center justify-center"
+          style={{ backgroundColor: 'var(--clay-bg)' }}
         >
-          <Icon size={14} style={{ color: accent }} />
+          <Icon size={15} style={{ color: accent }} />
         </div>
       </div>
-      <p
-        className="text-3xl font-black"
-        style={{ fontFamily: "'Barlow Condensed',sans-serif", color: CYPRUS }}
-      >
+      <p className="text-3xl font-display leading-none" style={{ color: INK }}>
         {value}
       </p>
       {sub && (
-        <p className="text-xs" style={{ color: 'rgba(0,70,67,0.45)', fontFamily: "'DM Sans',sans-serif" }}>
+        <p className="text-xs" style={{ color: MUTED, fontFamily: 'inherit' }}>
           {sub}
         </p>
       )}
@@ -167,7 +158,6 @@ function StatCard({ label, value, sub, icon: Icon, accent = CYPRUS }) {
   );
 }
 
-                  
 // ─── Skill ring ───────────────────────────────────────────────────────────────
 function SkillRing({ skill = 0.5, label = 'Intermediate' }) {
   const pct = Math.round(skill * 100);
@@ -177,15 +167,15 @@ function SkillRing({ skill = 0.5, label = 'Intermediate' }) {
 
   return (
     <div className="flex flex-col items-center gap-2">
-      <div className="relative w-36 h-36">
+      <div className="relative w-32 h-32">
         <svg viewBox="0 0 120 120" className="w-full h-full -rotate-90">
-          <circle cx="60" cy="60" r={r} fill="none" stroke="rgba(0,70,67,0.12)" strokeWidth="10" />
+          <circle cx="60" cy="60" r={r} fill="none" stroke="color-mix(in srgb, var(--clay-on-primary) 22%, transparent)" strokeWidth="10" />
           <motion.circle
             cx="60"
             cy="60"
             r={r}
             fill="none"
-            stroke={CYPRUS}
+            stroke="var(--clay-on-primary)"
             strokeWidth="10"
             strokeLinecap="round"
             strokeDasharray={circ}
@@ -195,24 +185,13 @@ function SkillRing({ skill = 0.5, label = 'Intermediate' }) {
           />
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span
-            className="text-3xl font-black"
-            style={{ fontFamily: "'Barlow Condensed',sans-serif", color: CYPRUS }}
-          >
-            {pct}
-          </span>
-          <span
-            className="text-xs font-semibold uppercase tracking-wider"
-            style={{ color: 'rgba(0,70,67,0.5)', fontFamily: "'DM Sans',sans-serif" }}
-          >
+          <span className="text-3xl font-display leading-none" style={{ color: 'var(--clay-on-primary)' }}>{pct}</span>
+          <span className="text-[10px] font-semibold uppercase tracking-wider mt-1" style={{ fontFamily: 'inherit', color: 'var(--clay-on-primary)', opacity: 0.55 }}>
             /100
           </span>
         </div>
       </div>
-      <span
-        className="text-sm font-bold uppercase tracking-widest px-3 py-1 rounded-full"
-        style={{ backgroundColor: 'rgba(0,70,67,0.1)', color: CYPRUS, fontFamily: "'DM Sans',sans-serif" }}
-      >
+      <span className="text-[10px] font-bold uppercase tracking-[0.14em] px-3 py-1.5 rounded-full" style={{ backgroundColor: 'color-mix(in srgb, var(--clay-on-primary) 16%, transparent)', color: 'var(--clay-on-primary)', fontFamily: 'inherit' }}>
         {label}
       </span>
     </div>
@@ -222,36 +201,30 @@ function SkillRing({ skill = 0.5, label = 'Intermediate' }) {
 // ─── Performance donut ────────────────────────────────────────────────────────
 function PerfBreakdown({ breakdown }) {
   const entries = [
-    { key: 'excellent', color: '#10b981', label: 'Excellent' },
-    { key: 'good', color: '#60a5fa', label: 'Good' },
-    { key: 'fair', color: '#f59e0b', label: 'Fair' },
-    { key: 'poor', color: '#f87171', label: 'Poor' },
+    { key: 'excellent', color: 'var(--clay-mint)', label: 'Excellent' },
+    { key: 'good', color: 'var(--clay-blue)', label: 'Good' },
+    { key: 'fair', color: 'var(--clay-gold)', label: 'Fair' },
+    { key: 'poor', color: 'var(--clay-peach)', label: 'Poor' },
   ];
   const total = entries.reduce((s, e) => s + (breakdown[e.key] || 0), 0);
   if (total === 0)
     return (
-      <p className="text-sm" style={{ color: 'rgba(0,70,67,0.4)', fontFamily: "'DM Sans',sans-serif" }}>
+      <p className="text-sm" style={{ color: MUTED, fontFamily: 'inherit' }}>
         No completed debates yet.
       </p>
     );
 
   return (
-    <div className="flex flex-col gap-2 w-full">
+    <div className="flex flex-col gap-3 w-full">
       {entries.map(({ key, color, label }) => {
         const val = breakdown[key] || 0;
         const pct = total > 0 ? Math.round((val / total) * 100) : 0;
         return (
           <div key={key} className="flex items-center gap-3">
-            <span
-              className="text-xs w-16 font-semibold"
-              style={{ color: 'rgba(0,70,67,0.6)', fontFamily: "'DM Sans',sans-serif" }}
-            >
+            <span className="text-xs w-16 font-semibold" style={{ color: INK_SOFT, fontFamily: 'inherit' }}>
               {label}
             </span>
-            <div
-              className="flex-1 h-2 rounded-full overflow-hidden"
-              style={{ backgroundColor: 'rgba(0,70,67,0.1)' }}
-            >
+            <div className="flex-1 h-2.5 rounded-full overflow-hidden" style={{ backgroundColor: 'var(--clay-bg-deep)' }}>
               <motion.div
                 className="h-full rounded-full"
                 initial={{ width: 0 }}
@@ -260,10 +233,7 @@ function PerfBreakdown({ breakdown }) {
                 style={{ backgroundColor: color }}
               />
             </div>
-            <span
-              className="text-xs w-8 text-right font-bold"
-              style={{ color: CYPRUS, fontFamily: "'Barlow Condensed',sans-serif" }}
-            >
+            <span className="text-xs w-8 text-right font-bold" style={{ color: INK, fontFamily: 'inherit' }}>
               {val}
             </span>
           </div>
@@ -275,9 +245,9 @@ function PerfBreakdown({ breakdown }) {
 
 // ─── Trend icon ───────────────────────────────────────────────────────────────
 function TrendIcon({ trend }) {
-  if (trend === 'improving') return <TrendingUp size={16} className="text-green-500" />;
-  if (trend === 'declining') return <TrendingDown size={16} className="text-red-400" />;
-  return <Minus size={16} style={{ color: 'rgba(0,70,67,0.4)' }} />;
+  if (trend === 'improving') return <TrendingUp size={17} style={{ color: 'var(--clay-mint)' }} />;
+  if (trend === 'declining') return <TrendingDown size={17} style={{ color: 'var(--clay-danger)' }} />;
+  return <Minus size={17} style={{ color: MUTED }} />;
 }
 
 // ─── Main page ────────────────────────────────────────────────────────────────
@@ -286,10 +256,10 @@ export default function Profile() {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [activeTab, setActiveTab] = useState('overview'); // overview | achievements | history
-   const [editingName, setEditingName] = useState(false);
-   const [nameInput, setNameInput] = useState('');
-   const [savingName, setSavingName] = useState(false);
+  const [activeTab, setActiveTab] = useState('overview');
+  const [editingName, setEditingName] = useState(false);
+  const [nameInput, setNameInput] = useState('');
+  const [savingName, setSavingName] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -297,7 +267,7 @@ export default function Profile() {
         const res = await fetch(`${BASE}/${DUMMY_USER_ID}/profile`);
         if (!res.ok) throw new Error(`${res.status}`);
         setProfile(await res.json());
-      } catch (e) {
+      } catch {
         setError('Could not load profile. Make sure the backend is running.');
       } finally {
         setLoading(false);
@@ -308,22 +278,13 @@ export default function Profile() {
   // ── Loading ────────────────────────────────────────────────────────────────
   if (loading)
     return (
-      <div
-        className="min-h-screen flex items-center justify-center"
-        style={{ backgroundColor: SAND }}
-      >
-        <link
-          href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=DM+Sans:wght@400;500;600&display=swap"
-          rel="stylesheet"
-        />
+      <div className="min-h-screen flex items-center justify-center clay-bg">
         <div className="flex flex-col items-center gap-4">
           <div
-            className="w-10 h-10 rounded-full border-4 border-t-transparent animate-spin"
-            style={{ borderColor: `${CYPRUS}40`, borderTopColor: CYPRUS }}
+            className="w-12 h-12 rounded-full border-4 border-t-transparent animate-spin"
+            style={{ borderColor: 'var(--clay-bg-deep)', borderTopColor: PRIMARY }}
           />
-          <p style={{ color: CYPRUS, fontFamily: "'DM Sans',sans-serif", opacity: 0.6 }}>
-            Loading profile…
-          </p>
+          <p style={{ color: INK_SOFT, fontFamily: 'inherit' }}>Loading profile…</p>
         </div>
       </div>
     );
@@ -331,28 +292,16 @@ export default function Profile() {
   // ── Error ──────────────────────────────────────────────────────────────────
   if (error)
     return (
-      <div
-        className="min-h-screen flex items-center justify-center p-8"
-        style={{ backgroundColor: SAND }}
-      >
-        <link
-          href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=DM+Sans:wght@400;500;600&display=swap"
-          rel="stylesheet"
-        />
-        <div className="text-center max-w-sm">
-          <p
-            className="text-5xl font-black mb-4"
-            style={{ fontFamily: "'Barlow Condensed',sans-serif", color: CYPRUS }}
-          >
-            Oops
-          </p>
-          <p style={{ color: 'rgba(0,70,67,0.6)', fontFamily: "'DM Sans',sans-serif" }}>{error}</p>
+      <div className="min-h-screen flex items-center justify-center p-8 clay-bg">
+        <div className="clay-card text-center max-w-sm p-8">
+          <div className="clay-avatar w-14 h-14 mx-auto mb-5 text-xl font-display">!</div>
+          <p className="font-display text-3xl mb-3" style={{ color: INK }}>Oops</p>
+          <p style={{ color: INK_SOFT, fontFamily: 'inherit' }}>{error}</p>
           <button
             onClick={() => navigate('/')}
-            className="mt-6 px-6 py-3 rounded-xl font-bold uppercase tracking-wider text-sm"
-            style={{ backgroundColor: CYPRUS, color: SAND, fontFamily: "'DM Sans',sans-serif" }}
+            className="clay-btn mt-6 px-6 py-3 text-sm font-bold uppercase tracking-wider"
           >
-            Go Home
+            Go home
           </button>
         </div>
       </div>
@@ -361,69 +310,44 @@ export default function Profile() {
   const { user, stats, achievements, recent_debates, growth_trajectory } = profile;
   const tabs = ['overview', 'achievements', 'history'];
 
-
-   const handleSaveName = async () => {
-     const trimmed = nameInput.trim();
-     if (!trimmed) return;
-     setSavingName(true);
-     try {
-       const res = await fetch(`http://127.0.0.1:8000/api/user/${DUMMY_USER_ID}/update`, {
-         method: 'PATCH',
-         headers: { 'Content-Type': 'application/json' },
-         body: JSON.stringify({ username: trimmed }),
-       });
-       if (res.ok) {
-         setProfile(prev => ({
-           ...prev,
-           user: { ...prev.user, username: trimmed }
-         }));
-         setEditingName(false);
-       }
-     } finally {
-       setSavingName(false);
-     }
-   };
+  const handleSaveName = async () => {
+    const trimmed = nameInput.trim();
+    if (!trimmed) return;
+    setSavingName(true);
+    try {
+      const res = await fetch(`http://127.0.0.1:8000/api/user/${DUMMY_USER_ID}/update`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: trimmed }),
+      });
+      if (res.ok) {
+        setProfile((prev) => ({
+          ...prev,
+          user: { ...prev.user, username: trimmed },
+        }));
+        setEditingName(false);
+      }
+    } finally {
+      setSavingName(false);
+    }
+  };
 
   return (
-    <div
-      className="min-h-screen"
-      style={{ backgroundColor: SAND, fontFamily: "'Barlow Condensed',sans-serif" }}
-    >
-      <link
-        href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=DM+Sans:wght@400;500;600&display=swap"
-        rel="stylesheet"
-      />
-
-      {/* Grain overlay */}
-      <div
-        className="fixed inset-0 pointer-events-none opacity-20 z-0"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E")`,
-        }}
-      />
-
-      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 py-8">
-
+    <div className="min-h-screen clay-bg" style={{ fontFamily: 'inherit' }}>
+      <div className="relative z-10 max-w-6xl mx-auto px-5 sm:px-8 py-10 sm:py-14">
         {/* ── Header ── */}
         <motion.div
           initial={{ opacity: 0, y: -16 }}
           animate={{ opacity: 1, y: 0 }}
           className="flex items-center justify-between mb-10"
         >
-          <button
-            onClick={() => navigate('/')}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-sm transition-all hover:bg-white/60"
-            style={{ color: CYPRUS, fontFamily: "'DM Sans',sans-serif", border: '1px solid rgba(0,70,67,0.15)' }}
-          >
+          <button onClick={() => navigate('/')} className="clay-btn-soft px-4 py-2.5 text-sm font-semibold" style={{ color: INK_SOFT }}>
             <ArrowLeft size={16} /> Back
           </button>
-          <h1
-            className="text-3xl font-black uppercase tracking-tighter"
-            style={{ color: CYPRUS }}
-          >
+          <h1 className="font-display text-2xl sm:text-3xl" style={{ color: INK }}>
             Profile
           </h1>
-          <div className="w-20" />
+          <ThemeToggle />
         </motion.div>
 
         {/* ── Hero card ── */}
@@ -431,86 +355,107 @@ export default function Profile() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="rounded-3xl p-7 mb-6 flex flex-col sm:flex-row items-center sm:items-start gap-6"
-          style={{ backgroundColor: CYPRUS, color: SAND }}
+          className="clay-card-primary p-6 sm:p-9 mb-8 flex flex-col sm:flex-row items-center sm:items-center gap-6"
         >
-          {/* Avatar */}
           <div
-            className="w-20 h-20 rounded-2xl flex items-center justify-center shrink-0 text-4xl font-black"
-            style={{ backgroundColor: 'rgba(240,237,229,0.15)', fontFamily: "'Barlow Condensed',sans-serif" }}
+            className="w-20 h-20 rounded-[24px] flex items-center justify-center shrink-0 text-4xl font-display"
+            style={{
+              background: 'color-mix(in srgb, var(--clay-on-primary) 10%, transparent)',
+              border: '1px solid color-mix(in srgb, var(--clay-on-primary) 18%, transparent)',
+              color: 'var(--clay-on-primary)',
+              boxShadow: 'inset 1px 1px 2px color-mix(in srgb, var(--clay-on-primary) 12%, transparent)',
+            }}
           >
             {(user.username || 'D').charAt(0).toUpperCase()}
           </div>
 
-          <div className="flex-1 text-center sm:text-left">
-   {editingName ? (
-     <div className="flex items-center gap-2 mt-1">
-       <input
-         autoFocus
-         value={nameInput}
-         onChange={e => setNameInput(e.target.value)}
-         onKeyDown={e => { if (e.key === 'Enter') handleSaveName(); if (e.key === 'Escape') setEditingName(false); }}
-         className="px-3 py-1.5 rounded-lg text-sm font-semibold outline-none"
-         style={{ backgroundColor: 'rgba(240,237,229,0.15)', color: SAND, border: '1px solid rgba(240,237,229,0.3)', fontFamily: "'DM Sans',sans-serif", width: '180px' }}
-         maxLength={50}
-       />
-       <button onClick={handleSaveName} disabled={savingName}
-         className="px-3 py-1.5 rounded-lg text-xs font-bold uppercase"
-         style={{ backgroundColor: 'rgba(240,237,229,0.2)', color: SAND, fontFamily: "'DM Sans',sans-serif" }}>
-         {savingName ? '…' : 'Save'}
-       </button>
-       <button onClick={() => setEditingName(false)}
-         className="px-3 py-1.5 rounded-lg text-xs font-bold uppercase"
-         style={{ backgroundColor: 'rgba(240,237,229,0.1)', color: 'rgba(240,237,229,0.6)', fontFamily: "'DM Sans',sans-serif" }}>
-         Cancel
-       </button>
-     </div>
-   ) : (
-     <div className="flex items-center gap-2">
-       <p className="text-2xl font-black uppercase tracking-tight">
-         {user.username || 'Debater'}
-       </p>
-       <button
-         onClick={() => { setNameInput(user.username || ''); setEditingName(true); }}
-         className="opacity-50 hover:opacity-100 transition-opacity"
-         title="Edit name"
-       >
-         <Pencil size={14} color={SAND} />
-       </button>
-     </div>
-   )}
-            <p className="text-sm mt-1 opacity-60" style={{ fontFamily: "'DM Sans',sans-serif" }}>
+          <div className="flex-1 text-center sm:text-left min-w-0">
+            {editingName ? (
+              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                <input
+                  autoFocus
+                  value={nameInput}
+                  onChange={(e) => setNameInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') handleSaveName();
+                    if (e.key === 'Escape') setEditingName(false);
+                  }}
+                  className="px-3 py-2 rounded-xl text-sm font-semibold outline-none"
+                  style={{
+                    backgroundColor: 'color-mix(in srgb, var(--clay-on-primary) 12%, transparent)',
+                    color: 'var(--clay-on-primary)',
+                    border: '1px solid color-mix(in srgb, var(--clay-on-primary) 24%, transparent)',
+                    fontFamily: 'inherit',
+                    width: '180px',
+                  }}
+                  maxLength={50}
+                />
+                <button
+                  onClick={handleSaveName}
+                  disabled={savingName}
+                  className="px-3 py-2 rounded-xl text-xs font-bold uppercase"
+                  style={{
+                    backgroundColor: 'color-mix(in srgb, var(--clay-on-primary) 20%, transparent)',
+                    color: 'var(--clay-on-primary)',
+                  }}
+                >
+                  {savingName ? '…' : 'Save'}
+                </button>
+                <button
+                  onClick={() => setEditingName(false)}
+                  className="px-3 py-2 rounded-xl text-xs font-bold uppercase"
+                  style={{
+                    backgroundColor: 'color-mix(in srgb, var(--clay-on-primary) 8%, transparent)',
+                    color: 'var(--clay-on-primary)',
+                    opacity: 0.7,
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center justify-center sm:justify-start gap-2">
+                <p className="text-2xl sm:text-3xl font-display truncate" style={{ color: 'var(--clay-on-primary)' }}>
+                  {user.username || 'Debater'}
+                </p>
+                <button
+                  onClick={() => {
+                    setNameInput(user.username || '');
+                    setEditingName(true);
+                  }}
+                  className="opacity-60 hover:opacity-100 transition-opacity"
+                  title="Edit name"
+                >
+                  <Pencil size={15} color="var(--clay-on-primary)" />
+                </button>
+              </div>
+            )}
+            <p className="text-sm mt-1.5" style={{ color: 'var(--clay-on-primary)', opacity: 0.72 }}>
               {user.email || 'Anonymous User'}
             </p>
-            <p className="text-xs mt-2 opacity-40" style={{ fontFamily: "'DM Sans',sans-serif" }}>
+            <p className="text-xs mt-2" style={{ color: 'var(--clay-on-primary)', opacity: 0.5 }}>
               Member since{' '}
-              {new Date(user.member_since).toLocaleDateString('en-US', {
-                month: 'long',
-                year: 'numeric',
-              })}
+              {new Date(user.member_since).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
             </p>
           </div>
 
-          {/* Skill ring */}
           <div className="shrink-0">
             <SkillRing skill={user.current_skill_level} label={user.skill_label} />
           </div>
         </motion.div>
 
         {/* ── Tabs ── */}
-        <div
-          className="flex gap-1 p-1 rounded-2xl mb-6"
-          style={{ backgroundColor: 'rgba(0,70,67,0.08)' }}
-        >
+        <div className="clay-inset p-2 flex gap-2 rounded-full mb-8">
           {tabs.map((t) => (
             <button
               key={t}
               onClick={() => setActiveTab(t)}
-              className="flex-1 py-2.5 rounded-xl text-sm font-bold uppercase tracking-widest transition-all"
+              className="flex-1 py-2.5 rounded-full text-xs sm:text-sm font-bold uppercase tracking-[0.12em] transition-all"
               style={{
-                fontFamily: "'DM Sans',sans-serif",
-                backgroundColor: activeTab === t ? CYPRUS : 'transparent',
-                color: activeTab === t ? SAND : 'rgba(0,70,67,0.55)',
+                fontFamily: 'inherit',
+                background: activeTab === t ? 'var(--clay-grad-primary)' : 'transparent',
+                color: activeTab === t ? 'var(--clay-on-primary)' : 'var(--clay-ink-soft)',
+                boxShadow: activeTab === t ? 'var(--shadow-primary)' : 'none',
               }}
             >
               {t}
@@ -519,7 +464,6 @@ export default function Profile() {
         </div>
 
         <AnimatePresence mode="wait">
-
           {/* ══════════════ OVERVIEW TAB ══════════════ */}
           {activeTab === 'overview' && (
             <motion.div
@@ -529,67 +473,41 @@ export default function Profile() {
               exit={{ opacity: 0, y: -8 }}
               className="space-y-6"
             >
-              {/* Quick stats grid */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <StatCard
-                  label="Total Debates"
-                  value={stats.total_debates}
-                  icon={BarChart2}
-                />
-                <StatCard
-                  label="Completed"
-                  value={stats.completed_debates}
-                  icon={Trophy}
-                  accent="#10b981"
-                />
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-5">
+                <StatCard label="Total Debates" value={stats.total_debates} icon={BarChart2} />
+                <StatCard label="Completed" value={stats.completed_debates} icon={Trophy} accent="var(--clay-mint)" />
                 <StatCard
                   label="Avg Strength"
                   value={stats.avg_argument_strength > 0 ? stats.avg_argument_strength.toFixed(1) : '–'}
                   sub="out of 10"
                   icon={Zap}
-                  accent="#f59e0b"
+                  accent="var(--clay-gold)"
                 />
                 <StatCard
                   label="Fallacies"
                   value={stats.total_fallacies}
                   sub={`${stats.avg_fallacies_per_debate.toFixed(1)} per debate`}
                   icon={Target}
-                  accent="#ef4444"
+                  accent="var(--clay-peach)"
                 />
               </div>
 
-              {/* Performance breakdown + trend */}
-              <div className="grid sm:grid-cols-2 gap-4">
-                <div
-                  className="rounded-2xl p-5"
-                  style={{ backgroundColor: 'rgba(0,70,67,0.04)', border: '1px solid rgba(0,70,67,0.08)' }}
-                >
-                  <p
-                    className="text-xs font-bold uppercase tracking-widest mb-4"
-                    style={{ color: 'rgba(0,70,67,0.5)', fontFamily: "'DM Sans',sans-serif" }}
-                  >
-                    Performance Breakdown
+                <div className="grid sm:grid-cols-2 gap-6">
+                <div className="clay-card p-5 sm:p-6">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-4" style={{ color: MUTED }}>
+                    Performance breakdown
                   </p>
                   <PerfBreakdown breakdown={stats.performance_breakdown} />
                 </div>
 
-                <div
-                  className="rounded-2xl p-5 flex flex-col gap-4"
-                  style={{ backgroundColor: 'rgba(0,70,67,0.04)', border: '1px solid rgba(0,70,67,0.08)' }}
-                >
-                  <p
-                    className="text-xs font-bold uppercase tracking-widest"
-                    style={{ color: 'rgba(0,70,67,0.5)', fontFamily: "'DM Sans',sans-serif" }}
-                  >
-                    Skill Trend
+                <div className="clay-card p-5 sm:p-6 flex flex-col gap-4">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: MUTED }}>
+                    Skill trend
                   </p>
                   <div className="flex items-center gap-3">
                     <TrendIcon trend={stats.skill_trend} />
-                    <span
-                      className="text-xl font-black capitalize"
-                      style={{ fontFamily: "'Barlow Condensed',sans-serif", color: CYPRUS }}
-                    >
-                  {stats.skill_trend === 'insufficient_data'
+                    <span className="text-xl font-display capitalize" style={{ color: INK }}>
+                      {stats.skill_trend === 'insufficient_data'
                         ? 'Not enough data yet'
                         : stats.skill_trend.charAt(0).toUpperCase() + stats.skill_trend.slice(1)}
                     </span>
@@ -599,11 +517,10 @@ export default function Profile() {
                         style={{
                           color:
                             stats.improvement_percentage > 0
-                              ? '#10b981'
+                              ? 'var(--clay-mint)'
                               : stats.improvement_percentage < 0
-                              ? '#ef4444'
-                              : 'rgba(0,70,67,0.5)',
-                          fontFamily: "'DM Sans',sans-serif",
+                              ? 'var(--clay-danger)'
+                              : MUTED,
                         }}
                       >
                         {stats.improvement_percentage > 0 ? '+' : ''}
@@ -611,46 +528,28 @@ export default function Profile() {
                       </span>
                     )}
                   </div>
-                  <div
-                    className="text-sm flex gap-4"
-                    style={{ color: 'rgba(0,70,67,0.55)', fontFamily: "'DM Sans',sans-serif" }}
-                  >
+                  <div className="text-sm flex gap-4" style={{ color: INK_SOFT }}>
                     <span>
                       Preferred:{' '}
-                      <strong style={{ color: CYPRUS, fontFamily: "'Barlow Condensed',sans-serif" }}>
+                      <strong style={{ color: PRIMARY }}>
                         {stats.preferred_difficulty
-                          ? stats.preferred_difficulty.charAt(0).toUpperCase() +
-                            stats.preferred_difficulty.slice(1)
+                          ? stats.preferred_difficulty.charAt(0).toUpperCase() + stats.preferred_difficulty.slice(1)
                           : '–'}
                       </strong>
                     </span>
                   </div>
-                  {/* mini achievement tease */}
-                  <p
-                    className="text-xs mt-auto"
-                    style={{ color: 'rgba(0,70,67,0.4)', fontFamily: "'DM Sans',sans-serif" }}
-                  >
-                    🏆 {achievements.total} achievement{achievements.total !== 1 ? 's' : ''} earned
+                  <p className="text-xs mt-auto" style={{ color: MUTED }}>
+                    {achievements.total} achievement{achievements.total !== 1 ? 's' : ''} earned
                   </p>
                 </div>
               </div>
 
-              {/* Growth chart */}
-              <div
-                className="rounded-2xl p-5"
-                style={{ backgroundColor: 'rgba(0,70,67,0.04)', border: '1px solid rgba(0,70,67,0.08)' }}
-              >
-                <p
-                  className="text-xs font-bold uppercase tracking-widest mb-4"
-                  style={{ color: 'rgba(0,70,67,0.5)', fontFamily: "'DM Sans',sans-serif" }}
-                >
-                  Argument Strength Over Time
+              <div className="clay-card p-5 sm:p-6">
+                <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-5" style={{ color: MUTED }}>
+                  Argument strength over time
                 </p>
                 <MiniBarChart data={growth_trajectory} />
-                <p
-                  className="text-xs mt-3 text-right"
-                  style={{ color: 'rgba(0,70,67,0.35)', fontFamily: "'DM Sans',sans-serif" }}
-                >
+                <p className="text-[11px] mt-4 text-right" style={{ color: MUTED }}>
                   Each bar = one completed debate
                 </p>
               </div>
@@ -666,34 +565,20 @@ export default function Profile() {
               exit={{ opacity: 0, y: -8 }}
             >
               {achievements.list.length === 0 ? (
-                <div
-                  className="rounded-3xl p-12 flex flex-col items-center gap-4 text-center"
-                  style={{ backgroundColor: 'rgba(0,70,67,0.04)', border: '1px solid rgba(0,70,67,0.08)' }}
-                >
-                  <Star size={36} style={{ color: 'rgba(0,70,67,0.2)' }} />
-                  <p
-                    className="text-xl font-black uppercase"
-                    style={{ color: 'rgba(0,70,67,0.3)', fontFamily: "'Barlow Condensed',sans-serif" }}
-                  >
-                    No achievements yet
+                <div className="clay-card p-12 flex flex-col items-center gap-4 text-center">
+                  <div className="clay-inset w-16 h-16 flex items-center justify-center">
+                    <Star size={26} style={{ color: 'var(--clay-gold)' }} />
+                  </div>
+                  <p className="text-xl font-display" style={{ color: INK }}>No achievements yet</p>
+                  <p className="text-sm max-w-xs" style={{ color: MUTED }}>
+                    Complete debates to earn badges. Try debating with few fallacies or going deep on a topic!
                   </p>
-                  <p
-                    className="text-sm max-w-xs"
-                    style={{ color: 'rgba(0,70,67,0.4)', fontFamily: "'DM Sans',sans-serif" }}
-                  >
-                    Complete debates to earn badges. Try debating with few fallacies or
-                    going deep on a topic!
-                  </p>
-                  <button
-                    onClick={() => navigate('/')}
-                    className="mt-2 px-5 py-2.5 rounded-xl font-bold text-sm uppercase tracking-wider"
-                    style={{ backgroundColor: CYPRUS, color: SAND, fontFamily: "'DM Sans',sans-serif" }}
-                  >
-                    Start a Debate
+                  <button onClick={() => navigate('/')} className="clay-btn mt-2 px-5 py-3 text-sm font-bold uppercase tracking-wider">
+                    Start a debate
                   </button>
                 </div>
               ) : (
-                <div className="grid sm:grid-cols-2 gap-4">
+              <div className="grid sm:grid-cols-2 gap-6">
                   {achievements.list.map((a, i) => {
                     const cfg = getBadgeConfig(a.badge_name);
                     const Icon = cfg.icon;
@@ -703,41 +588,17 @@ export default function Profile() {
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ delay: i * 0.05 }}
-                        className="rounded-2xl p-5 flex gap-4 items-start"
-                        style={{
-                          backgroundColor: 'rgba(0,70,67,0.04)',
-                          border: '1px solid rgba(0,70,67,0.1)',
-                        }}
+                        className="clay-card-sm p-5 flex gap-4 items-start"
                       >
-                        <div
-                          className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
-                          style={{ backgroundColor: `${cfg.color}18` }}
-                        >
+                        <div className="clay-inset w-12 h-12 flex items-center justify-center shrink-0">
                           <Icon size={22} style={{ color: cfg.color }} />
                         </div>
                         <div>
-                          <p
-                            className="font-black text-base uppercase tracking-tight"
-                            style={{ color: CYPRUS }}
-                          >
-                            {a.badge_name}
-                          </p>
-                          <p
-                            className="text-xs mt-1"
-                            style={{ color: 'rgba(0,70,67,0.55)', fontFamily: "'DM Sans',sans-serif" }}
-                          >
-                            {a.description}
-                          </p>
-                          <p
-                            className="text-xs mt-2 flex items-center gap-1"
-                            style={{ color: 'rgba(0,70,67,0.35)', fontFamily: "'DM Sans',sans-serif" }}
-                          >
+                          <p className="font-display text-base" style={{ color: INK }}>{a.badge_name}</p>
+                          <p className="text-xs mt-1" style={{ color: INK_SOFT }}>{a.description}</p>
+                          <p className="text-[11px] mt-2 flex items-center gap-1" style={{ color: MUTED }}>
                             <Calendar size={11} />
-                            {new Date(a.earned_at).toLocaleDateString('en-US', {
-                              month: 'short',
-                              day: 'numeric',
-                              year: 'numeric',
-                            })}
+                            {new Date(a.earned_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                           </p>
                         </div>
                       </motion.div>
@@ -755,33 +616,21 @@ export default function Profile() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
-              className="space-y-3"
+              className="space-y-4"
             >
               {recent_debates.length === 0 ? (
-                <div
-                  className="rounded-3xl p-12 text-center"
-                  style={{ backgroundColor: 'rgba(0,70,67,0.04)', border: '1px solid rgba(0,70,67,0.08)' }}
-                >
-                  <p
-                    className="text-xl font-black uppercase"
-                    style={{ color: 'rgba(0,70,67,0.3)', fontFamily: "'Barlow Condensed',sans-serif" }}
-                  >
-                    No debates yet
-                  </p>
+                <div className="clay-card p-12 text-center">
+                  <p className="text-xl font-display" style={{ color: MUTED }}>No debates yet</p>
                 </div>
               ) : (
                 recent_debates.map((d, i) => {
                   const isActive = !d.ended_at;
                   const perfColor =
-                    d.performance === 'excellent'
-                      ? '#10b981'
-                      : d.performance === 'good'
-                      ? '#60a5fa'
-                      : d.performance === 'fair'
-                      ? '#f59e0b'
-                      : isActive
-                      ? '#4ade80'
-                      : 'rgba(0,70,67,0.3)';
+                    d.performance === 'excellent' ? 'var(--clay-mint)' :
+                    d.performance === 'good'      ? 'var(--clay-blue)' :
+                    d.performance === 'fair'      ? 'var(--clay-gold)' :
+                    isActive                      ? 'var(--clay-mint)' :
+                    MUTED;
 
                   return (
                     <motion.div
@@ -791,83 +640,41 @@ export default function Profile() {
                       transition={{ delay: i * 0.06 }}
                       onClick={() =>
                         navigate(`/debate/${d.session_id}`, {
-                          state: {
-                            topic: d.topic,
-                            difficulty: d.difficulty,
-                            isResume: true,
-                          },
+                          state: { topic: d.topic, difficulty: d.difficulty, isResume: true },
                         })
                       }
-                      className="rounded-2xl p-5 flex items-center gap-4 cursor-pointer transition-all hover:scale-[1.01] active:scale-[0.99]"
-                      style={{
-                        backgroundColor: 'rgba(0,70,67,0.04)',
-                        border: '1px solid rgba(0,70,67,0.08)',
-                      }}
+                      className="clay-card-sm p-4 sm:p-5 flex items-center gap-4 cursor-pointer transition-all hover:-translate-y-0.5"
                     >
-                      {/* Status dot */}
-                      <div
-                        className="w-2.5 h-2.5 rounded-full shrink-0"
-                        style={{ backgroundColor: perfColor }}
-                      />
+                      <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: perfColor, boxShadow: `0 0 0 4px color-mix(in srgb, ${perfColor} 18%, transparent)` }} />
 
                       <div className="flex-1 min-w-0">
-                        <p
-                          className="font-bold text-base truncate"
-                          style={{ color: CYPRUS, fontFamily: "'Barlow Condensed',sans-serif", fontSize: '1.05rem' }}
-                        >
-                          {d.topic}
-                        </p>
-                        <div
-                          className="flex items-center gap-3 mt-1 flex-wrap"
-                          style={{ fontFamily: "'DM Sans',sans-serif" }}
-                        >
-                          <span
-                            className="text-xs px-2 py-0.5 rounded-full font-semibold capitalize"
-                            style={{
-                              backgroundColor: 'rgba(0,70,67,0.08)',
-                              color: 'rgba(0,70,67,0.7)',
-                            }}
-                          >
+                        <p className="font-display text-base truncate" style={{ color: INK }}>{d.topic}</p>
+                        <div className="flex items-center gap-2.5 mt-1.5 flex-wrap">
+                          <span className="text-[11px] px-2.5 py-0.5 rounded-full font-semibold capitalize" style={{ backgroundColor: 'var(--clay-bg)', color: INK_SOFT }}>
                             {d.difficulty}
                           </span>
                           {isActive ? (
-                            <span className="text-xs font-semibold text-green-500">● Active</span>
+                            <span className="text-[11px] font-semibold" style={{ color: 'var(--clay-mint)' }}>● Active</span>
                           ) : (
                             d.performance && (
-                              <span
-                                className="text-xs font-semibold capitalize"
-                                style={{ color: perfColor }}
-                              >
+                              <span className="text-[11px] font-semibold capitalize" style={{ color: perfColor }}>
                                 {d.performance}
                               </span>
                             )
                           )}
-                          <span className="text-xs" style={{ color: 'rgba(0,70,67,0.4)' }}>
-                            {new Date(d.started_at).toLocaleDateString('en-US', {
-                              month: 'short',
-                              day: 'numeric',
-                            })}
+                          <span className="text-[11px]" style={{ color: MUTED }}>
+                            {new Date(d.started_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                           </span>
                         </div>
                       </div>
 
                       {d.avg_argument_strength != null && (
                         <div className="text-right shrink-0">
-                          <p
-                            className="text-2xl font-black"
-                            style={{ color: CYPRUS, fontFamily: "'Barlow Condensed',sans-serif" }}
-                          >
-                            {d.avg_argument_strength.toFixed(1)}
-                          </p>
-                          <p
-                            className="text-xs"
-                            style={{ color: 'rgba(0,70,67,0.4)', fontFamily: "'DM Sans',sans-serif" }}
-                          >
-                            strength
-                          </p>
+                          <p className="text-2xl font-display leading-none" style={{ color: INK }}>{d.avg_argument_strength.toFixed(1)}</p>
+                          <p className="text-[10px] mt-1" style={{ color: MUTED }}>strength</p>
                         </div>
                       )}
-                      <ChevronRight size={16} style={{ color: 'rgba(0,70,67,0.3)' }} />
+                      <ChevronRight size={17} style={{ color: MUTED }} />
                     </motion.div>
                   );
                 })

@@ -57,11 +57,11 @@ function AgentInsightsPanel({ analyzerOutput, researchOutput, socraticOutput, ad
           <div>
             <h3
               className="font-black uppercase"
-              style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: '1.2rem', color: CYPRUS, letterSpacing: '-0.01em' }}
+              style={{ fontFamily: 'inherit', fontSize: '1.2rem', color: CYPRUS, letterSpacing: '-0.01em' }}
             >
               AI Insights
             </h3>
-            <p className="text-xs mt-0.5" style={{ color: 'rgba(0,70,67,0.5)', fontFamily: "'DM Sans', sans-serif" }}>
+            <p className="text-xs mt-0.5" style={{ color: 'rgba(0,70,67,0.5)', fontFamily: 'inherit' }}>
               Live argument analysis
             </p>
           </div>
@@ -70,7 +70,7 @@ function AgentInsightsPanel({ analyzerOutput, researchOutput, socraticOutput, ad
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold"
-              style={{ backgroundColor: 'rgba(0,70,67,0.1)', color: CYPRUS, fontFamily: "'DM Sans', sans-serif" }}
+              style={{ backgroundColor: 'rgba(0,70,67,0.1)', color: CYPRUS, fontFamily: 'inherit' }}
             >
               <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
               Working
@@ -137,7 +137,7 @@ function AgentInsightsPanel({ analyzerOutput, researchOutput, socraticOutput, ad
             >
               <Search size={18} color={CYPRUS} />
             </div>
-            <p className="text-xs text-center" style={{ color: 'rgba(0,70,67,0.5)', fontFamily: "'DM Sans', sans-serif" }}>
+            <p className="text-xs text-center" style={{ color: 'rgba(0,70,67,0.5)', fontFamily: 'inherit' }}>
               Agent insights will appear here as you debate
             </p>
           </div>
@@ -200,11 +200,11 @@ function AgentCard({ name, icon, title, isActive, isExpanded, onToggle, hasOutpu
             {icon}
           </div>
           <div className="text-left">
-            <p className="text-xs font-semibold" style={{ color: CYPRUS, fontFamily: "'DM Sans', sans-serif" }}>{title}</p>
+            <p className="text-xs font-semibold" style={{ color: CYPRUS, fontFamily: 'inherit' }}>{title}</p>
             <p
               className="text-xs"
               style={{
-                fontFamily: "'DM Sans', sans-serif",
+                fontFamily: 'inherit',
                 color: isActive ? CYPRUS : justCompleted ? '#22c55e' : hasOutput ? 'rgba(0,70,67,0.4)' : 'rgba(0,70,67,0.4)'
               }}
             >
@@ -271,7 +271,7 @@ function AnalyzerInsights({ output }) {
       {/* Argument Strength Score */}
       {data.argument_strength && (
         <div>
-          <p className="text-xs font-semibold mb-2" style={{ color: CYPRUS, fontFamily: "'DM Sans', sans-serif" }}>Argument Quality</p>
+          <p className="text-xs font-semibold mb-2" style={{ color: CYPRUS, fontFamily: 'inherit' }}>Argument Quality</p>
           <div className="flex items-center gap-3">
             <div className="flex-1 h-2 rounded-full overflow-hidden" style={{ backgroundColor: 'rgba(0,70,67,0.1)' }}>
               <motion.div
@@ -286,12 +286,12 @@ function AnalyzerInsights({ output }) {
                 }}
               />
             </div>
-            <span className="text-sm font-black" style={{ color: CYPRUS, fontFamily: "'Barlow Condensed', sans-serif" }}>
+            <span className="text-sm font-black" style={{ color: CYPRUS, fontFamily: 'inherit' }}>
               {data.argument_strength.overall_score}/10
             </span>
           </div>
           {data.argument_strength.breakdown && (
-            <p className="text-xs mt-1.5" style={{ color: 'rgba(0,70,67,0.6)', fontFamily: "'DM Sans', sans-serif" }}>{data.argument_strength.breakdown}</p>
+            <p className="text-xs mt-1.5" style={{ color: 'rgba(0,70,67,0.6)', fontFamily: 'inherit' }}>{data.argument_strength.breakdown}</p>
           )}
         </div>
       )}
@@ -299,7 +299,7 @@ function AnalyzerInsights({ output }) {
       {/* Fallacies */}
       {data.fallacies_detected?.length > 0 && (
         <div>
-          <p className="text-xs font-semibold mb-2" style={{ color: CYPRUS, fontFamily: "'DM Sans', sans-serif" }}>Logical Issues</p>
+          <p className="text-xs font-semibold mb-2" style={{ color: CYPRUS, fontFamily: 'inherit' }}>Logical Issues</p>
           {data.fallacies_detected.map((fallacy, idx) => (
             <motion.div
               key={idx}
@@ -312,10 +312,10 @@ function AnalyzerInsights({ output }) {
                 backgroundColor: fallacy.severity === 'severe' ? 'rgba(239,68,68,0.05)' : 'rgba(245,158,11,0.05)'
               }}
             >
-              <p className="text-xs font-semibold capitalize" style={{ color: '#1a1a1a', fontFamily: "'DM Sans', sans-serif" }}>
+              <p className="text-xs font-semibold capitalize" style={{ color: '#1a1a1a', fontFamily: 'inherit' }}>
                 {fallacy.type?.replace(/_/g, ' ')}
               </p>
-              <p className="text-xs mt-0.5" style={{ color: 'rgba(0,0,0,0.6)', fontFamily: "'DM Sans', sans-serif" }}>{fallacy.explanation}</p>
+              <p className="text-xs mt-0.5" style={{ color: 'rgba(0,0,0,0.6)', fontFamily: 'inherit' }}>{fallacy.explanation}</p>
             </motion.div>
           ))}
         </div>
@@ -324,9 +324,9 @@ function AnalyzerInsights({ output }) {
       {/* Assumptions */}
       {data.implicit_assumptions?.length > 0 && (
         <div>
-          <p className="text-xs font-semibold mb-1.5" style={{ color: CYPRUS, fontFamily: "'DM Sans', sans-serif" }}>Assumptions</p>
+          <p className="text-xs font-semibold mb-1.5" style={{ color: CYPRUS, fontFamily: 'inherit' }}>Assumptions</p>
           {data.implicit_assumptions.slice(0, 2).map((a, i) => (
-            <div key={i} className="text-xs mb-1" style={{ color: 'rgba(0,70,67,0.7)', fontFamily: "'DM Sans', sans-serif" }}>
+            <div key={i} className="text-xs mb-1" style={{ color: 'rgba(0,70,67,0.7)', fontFamily: 'inherit' }}>
               · {a.assumption || a}
             </div>
           ))}
@@ -373,8 +373,8 @@ function ResearchInsights({ output }) {
         <div className="flex items-center gap-2 p-2.5 rounded-xl border" style={{ borderColor: sc.border, backgroundColor: sc.bg }}>
           <sc.Icon size={14} color={sc.color} />
           <div>
-            <p className="text-xs font-semibold" style={{ color: sc.color, fontFamily: "'DM Sans', sans-serif" }}>{sc.label}</p>
-            <p className="text-xs" style={{ color: 'rgba(0,0,0,0.5)', fontFamily: "'DM Sans', sans-serif" }}>
+            <p className="text-xs font-semibold" style={{ color: sc.color, fontFamily: 'inherit' }}>{sc.label}</p>
+            <p className="text-xs" style={{ color: 'rgba(0,0,0,0.5)', fontFamily: 'inherit' }}>
               {totalSources} source{totalSources !== 1 ? 's' : ''} analyzed
               {credibility.high_credibility_count > 0 && ` · ${credibility.high_credibility_count} high credibility`}
             </p>
@@ -385,11 +385,11 @@ function ResearchInsights({ output }) {
       {/* Strongest Source */}
       {strongest && (
         <div>
-          <p className="text-xs font-semibold mb-1.5" style={{ color: CYPRUS, fontFamily: "'DM Sans', sans-serif" }}>
+          <p className="text-xs font-semibold mb-1.5" style={{ color: CYPRUS, fontFamily: 'inherit' }}>
             Most Credible Source
           </p>
           <div className="p-2.5 rounded-xl border" style={{ borderColor: 'rgba(0,70,67,0.15)', backgroundColor: 'rgba(0,70,67,0.03)' }}>
-            <p className="text-xs font-medium" style={{ color: '#1a1a1a', fontFamily: "'DM Sans', sans-serif" }}>
+            <p className="text-xs font-medium" style={{ color: '#1a1a1a', fontFamily: 'inherit' }}>
               {strongest.title || strongest.source_name || 'Source'}
             </p>
             {strongest.url && (
@@ -398,7 +398,7 @@ function ResearchInsights({ output }) {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-xs mt-0.5 block truncate"
-                style={{ color: 'rgba(0,70,67,0.5)', fontFamily: "'DM Sans', sans-serif" }}
+                style={{ color: 'rgba(0,70,67,0.5)', fontFamily: 'inherit' }}
               >
                 {strongest.url}
               </a>
@@ -410,7 +410,7 @@ function ResearchInsights({ output }) {
       {/* Supporting Evidence */}
       {supporting.length > 0 && (
         <div>
-          <p className="text-xs font-semibold mb-1.5" style={{ color: '#16a34a', fontFamily: "'DM Sans', sans-serif" }}>
+          <p className="text-xs font-semibold mb-1.5" style={{ color: '#16a34a', fontFamily: 'inherit' }}>
             Supporting ({supporting.length})
           </p>
           {supporting.slice(0, 2).map((ev, i) => (
@@ -422,7 +422,7 @@ function ResearchInsights({ output }) {
       {/* Opposing Evidence */}
       {opposing.length > 0 && (
         <div>
-          <p className="text-xs font-semibold mb-1.5" style={{ color: '#dc2626', fontFamily: "'DM Sans', sans-serif" }}>
+          <p className="text-xs font-semibold mb-1.5" style={{ color: '#dc2626', fontFamily: 'inherit' }}>
             Opposing ({opposing.length})
           </p>
           {opposing.slice(0, 2).map((ev, i) => (
@@ -434,7 +434,7 @@ function ResearchInsights({ output }) {
       {/* Neutral Evidence */}
       {neutral.length > 0 && (
         <div>
-          <p className="text-xs font-semibold mb-1.5" style={{ color: 'rgba(0,70,67,0.6)', fontFamily: "'DM Sans', sans-serif" }}>
+          <p className="text-xs font-semibold mb-1.5" style={{ color: 'rgba(0,70,67,0.6)', fontFamily: 'inherit' }}>
             Neutral ({neutral.length})
           </p>
           {neutral.slice(0, 1).map((ev, i) => (
@@ -445,7 +445,7 @@ function ResearchInsights({ output }) {
 
       {/* Fallback — research ran but categorisation returned nothing */}
       {!hasContent && (
-        <p className="text-xs" style={{ color: 'rgba(0,70,67,0.5)', fontFamily: "'DM Sans', sans-serif" }}>
+        <p className="text-xs" style={{ color: 'rgba(0,70,67,0.5)', fontFamily: 'inherit' }}>
           Research completed but no categorised evidence found. The AI will still use these findings in its response.
         </p>
       )}
@@ -460,16 +460,16 @@ function EvidenceItem({ ev, accentColor, accentBg }) {
       className="p-2.5 rounded-xl mb-2 border"
       style={{ borderColor: accentColor, backgroundColor: accentBg }}
     >
-      <p className="text-xs font-medium" style={{ color: '#1a1a1a', fontFamily: "'DM Sans', sans-serif" }}>
+      <p className="text-xs font-medium" style={{ color: '#1a1a1a', fontFamily: 'inherit' }}>
         {ev.source_name || ev.title || 'Source'}
       </p>
       {ev.key_finding && (
-        <p className="text-xs mt-0.5" style={{ color: 'rgba(0,0,0,0.6)', fontFamily: "'DM Sans', sans-serif" }}>
+        <p className="text-xs mt-0.5" style={{ color: 'rgba(0,0,0,0.6)', fontFamily: 'inherit' }}>
           {ev.key_finding}
         </p>
       )}
       {ev.publication_year && (
-        <p className="text-xs mt-0.5" style={{ color: 'rgba(0,0,0,0.35)', fontFamily: "'DM Sans', sans-serif" }}>
+        <p className="text-xs mt-0.5" style={{ color: 'rgba(0,0,0,0.35)', fontFamily: 'inherit' }}>
           {ev.publication_year}
         </p>
       )}
@@ -493,7 +493,7 @@ function SocraticInsights({ output }) {
     <div className="space-y-2">
       {data.questions?.length > 0 ? (
         <>
-          <p className="text-xs font-semibold mb-2" style={{ color: CYPRUS, fontFamily: "'DM Sans', sans-serif" }}>
+          <p className="text-xs font-semibold mb-2" style={{ color: CYPRUS, fontFamily: 'inherit' }}>
             Questions Being Asked
           </p>
           {data.questions.map((q, i) => (
@@ -502,11 +502,11 @@ function SocraticInsights({ output }) {
               className="p-2.5 rounded-xl border"
               style={{ borderColor: 'rgba(0,70,67,0.15)', backgroundColor: 'rgba(0,70,67,0.03)' }}
             >
-              <p className="text-xs font-medium" style={{ color: '#1a1a1a', fontFamily: "'DM Sans', sans-serif" }}>
+              <p className="text-xs font-medium" style={{ color: '#1a1a1a', fontFamily: 'inherit' }}>
                 {q.question_text || q}
               </p>
               {q.question_type && (
-                <p className="text-xs mt-0.5 capitalize" style={{ color: 'rgba(0,70,67,0.5)', fontFamily: "'DM Sans', sans-serif" }}>
+                <p className="text-xs mt-0.5 capitalize" style={{ color: 'rgba(0,70,67,0.5)', fontFamily: 'inherit' }}>
                   {q.question_type.replace(/_/g, ' ')}
                 </p>
               )}
@@ -514,7 +514,7 @@ function SocraticInsights({ output }) {
           ))}
         </>
       ) : (
-        <p className="text-xs" style={{ color: 'rgba(0,70,67,0.5)', fontFamily: "'DM Sans', sans-serif" }}>
+        <p className="text-xs" style={{ color: 'rgba(0,70,67,0.5)', fontFamily: 'inherit' }}>
           Probing questions generated.
         </p>
       )}
@@ -542,10 +542,10 @@ function AdvocateInsights({ output }) {
           className="p-2.5 rounded-xl border"
           style={{ borderColor: 'rgba(0,70,67,0.2)', backgroundColor: 'rgba(0,70,67,0.04)' }}
         >
-          <p className="text-xs font-semibold mb-1" style={{ color: CYPRUS, fontFamily: "'DM Sans', sans-serif" }}>
+          <p className="text-xs font-semibold mb-1" style={{ color: CYPRUS, fontFamily: 'inherit' }}>
             Counter-Position
           </p>
-          <p className="text-xs" style={{ color: '#1a1a1a', fontFamily: "'DM Sans', sans-serif" }}>
+          <p className="text-xs" style={{ color: '#1a1a1a', fontFamily: 'inherit' }}>
             {data.opposing_position.statement || data.opposing_position}
           </p>
         </div>
@@ -554,7 +554,7 @@ function AdvocateInsights({ output }) {
       {/* Counter-Arguments */}
       {data.counter_arguments?.length > 0 && (
         <div>
-          <p className="text-xs font-semibold mb-2" style={{ color: CYPRUS, fontFamily: "'DM Sans', sans-serif" }}>
+          <p className="text-xs font-semibold mb-2" style={{ color: CYPRUS, fontFamily: 'inherit' }}>
             Counter-Arguments ({data.counter_arguments.length})
           </p>
           {data.counter_arguments.slice(0, 2).map((arg, i) => (
@@ -563,14 +563,14 @@ function AdvocateInsights({ output }) {
               className="p-2.5 rounded-xl mb-2 border"
               style={{ borderColor: 'rgba(192,92,58,0.2)', backgroundColor: 'rgba(192,92,58,0.04)' }}
             >
-              <p className="text-xs font-semibold capitalize" style={{ color: '#1a1a1a', fontFamily: "'DM Sans', sans-serif" }}>
+              <p className="text-xs font-semibold capitalize" style={{ color: '#1a1a1a', fontFamily: 'inherit' }}>
                 {arg.type?.replace(/_/g, ' ') || 'Counter'}
               </p>
-              <p className="text-xs mt-0.5" style={{ color: 'rgba(0,0,0,0.6)', fontFamily: "'DM Sans', sans-serif" }}>
+              <p className="text-xs mt-0.5" style={{ color: 'rgba(0,0,0,0.6)', fontFamily: 'inherit' }}>
                 {arg.argument}
               </p>
               {arg.strength && (
-                <p className="text-xs mt-0.5 capitalize" style={{ color: 'rgba(192,92,58,0.7)', fontFamily: "'DM Sans', sans-serif" }}>
+                <p className="text-xs mt-0.5 capitalize" style={{ color: 'rgba(192,92,58,0.7)', fontFamily: 'inherit' }}>
                   {arg.strength} argument
                 </p>
               )}
@@ -582,11 +582,11 @@ function AdvocateInsights({ output }) {
       {/* Concessions */}
       {data.concessions?.length > 0 && (
         <div>
-          <p className="text-xs font-semibold mb-1.5" style={{ color: CYPRUS, fontFamily: "'DM Sans', sans-serif" }}>
+          <p className="text-xs font-semibold mb-1.5" style={{ color: CYPRUS, fontFamily: 'inherit' }}>
             Conceded Points
           </p>
           {data.concessions.slice(0, 1).map((c, i) => (
-            <div key={i} className="text-xs" style={{ color: 'rgba(0,70,67,0.7)', fontFamily: "'DM Sans', sans-serif" }}>
+            <div key={i} className="text-xs" style={{ color: 'rgba(0,70,67,0.7)', fontFamily: 'inherit' }}>
               · {c.point || c}
             </div>
           ))}
