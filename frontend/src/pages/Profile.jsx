@@ -21,7 +21,6 @@ import {
   ChevronRight,
   Pencil,
 } from 'lucide-react';
-import ThemeToggle from '../components/ThemeToggle';
 
 const PRIMARY = 'var(--color-ap-ink)';
 const MUTED = 'var(--color-ap-muted)';
@@ -338,7 +337,6 @@ export default function Profile() {
             <span className="hidden text-[11px] font-semibold uppercase tracking-[0.18em] text-ap-muted sm:inline">
               Profile
             </span>
-            <ThemeToggle />
           </div>
         </div>
       </header>

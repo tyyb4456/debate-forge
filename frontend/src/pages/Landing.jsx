@@ -7,7 +7,6 @@ import { ArrowRight, ArrowUpRight, History, User } from 'lucide-react';
 import { debateService } from '../services/debateService';
 import PreviousDebatesSidebar from '../components/PreviousDebatesSidebar';
 import NameSetupModal from '../components/NameSetupModal';
-import ThemeToggle from '../components/ThemeToggle';
 
 const AGENTS = [
   {
@@ -72,7 +71,7 @@ const BTN_GHOST =
   'clay-btn clay-btn-ghost inline-flex h-[52px] items-center justify-center gap-2.5 px-6 text-ap-body font-medium leading-none text-ap-ink hover:bg-ap-ink/5 max-[520px]:w-full';
 
 const ICON_BTN =
-  'clay-icon inline-flex h-10 w-10 items-center justify-center text-ap-ink max-[520px]:h-[38px] max-[520px]:w-[38px]';
+  'clay-icon inline-flex h-10 w-10 shrink-0 items-center justify-center text-ap-ink';
 
 const SECTION_TITLE =
   'm-0 text-ap-head font-bold leading-[0.98] tracking-[-0.035em]';
@@ -145,7 +144,10 @@ function Landing() {
       behavior: reduceMotion ? 'auto' : 'smooth',
       block: 'center',
     });
-    window.setTimeout(() => inputRef.current?.focus(), reduceMotion ? 0 : 420);
+    window.setTimeout(
+      () => inputRef.current?.focus({ preventScroll: true }),
+      reduceMotion ? 0 : 420
+    );
   };
 
   const enter = reduceMotion
@@ -167,8 +169,8 @@ function Landing() {
         };
 
   return (
-    <div className="focus-ring min-h-svh overflow-x-clip scroll-smooth bg-ap-bg font-sans text-ap-ink antialiased selection:bg-ap-accent selection:text-ap-accent-ink motion-reduce:scroll-auto">
-      <header className="sticky top-0 z-50 bg-ap-bg">
+    <div className="min-h-svh overflow-x-clip font-sans text-ap-ink antialiased selection:bg-ap-accent selection:text-ap-accent-ink">
+      <header className="sticky top-0 z-50 border-b border-ap-line/70 bg-ap-bg">
         <nav
           className={`${CONTAINER} flex h-[76px] items-center justify-between gap-6 max-[760px]:h-[68px]`}
           aria-label="Main navigation"
@@ -201,7 +203,6 @@ function Landing() {
           </ul>
 
           <div className="flex items-center gap-2">
-            <ThemeToggle />
             <button
               type="button"
               onClick={() => setIsSidebarOpen(true)}
@@ -297,15 +298,9 @@ function Landing() {
                   })}
             >
               <div
-                className="clay-panel w-full max-w-[468px] overflow-hidden text-ap-panel-ink min-[980px]:ml-auto max-[980px]:max-w-[560px]"
+                className="clay-panel clay-panel-dark w-full max-w-[468px] overflow-hidden text-ap-panel-ink min-[980px]:ml-auto max-[980px]:max-w-[560px]"
                 data-ui
               >
-                <div className="flex h-2.5" aria-hidden="true">
-                  {Array.from({ length: 16 }).map((_, i) => (
-                    <span key={i} className="flex-1 bg-ap-accent even:bg-ap-panel-2" />
-                  ))}
-                </div>
-
                 <div className="p-[clamp(24px,3vw,34px)] max-[520px]:p-[22px]">
                   <div className="mb-7 flex items-start justify-between gap-4 max-[520px]:mb-6">
                     <div>
@@ -346,7 +341,7 @@ function Landing() {
                         if (error) setError('');
                       }}
                       placeholder="e.g. AI will replace most jobs by 2040"
-                      className="clay-inset-dark h-[52px] w-full px-4 text-ap-body font-medium text-ap-panel-ink outline-none transition-colors placeholder:font-normal placeholder:text-ap-panel-muted focus:border-ap-accent"
+                      className="clay-inset-dark h-[52px] w-full px-4 text-ap-body font-medium text-ap-panel-ink transition-colors placeholder:font-normal placeholder:text-ap-panel-muted focus:border-ap-accent"
                       autoComplete="off"
                       aria-invalid={Boolean(error)}
                       aria-describedby={error ? 'lp-motion-error' : undefined}
@@ -479,7 +474,10 @@ function Landing() {
                   </span>
                   <div>
                     <h3 className="m-0 flex items-center gap-2.5 text-ap-lead font-semibold leading-tight tracking-[-0.015em] text-ap-ink">
-                      <span className="h-2 w-2 flex-none bg-ap-accent" aria-hidden="true" />
+                      <span
+                        className="h-2 w-2 flex-none rounded-[3px] bg-ap-accent"
+                        aria-hidden="true"
+                      />
                       {agent.title}
                     </h3>
                     <p className="mt-2 max-w-[56ch] text-ap-body leading-[1.55] text-ap-ink-soft">
@@ -511,7 +509,7 @@ function Landing() {
 
             <div className="grid gap-4 min-[980px]:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
               <Motion.div
-                className="flex min-h-[260px] flex-col clay-panel p-[clamp(20px,2.4vw,28px)] text-ap-panel-ink"
+                className="clay-panel clay-panel-dark flex min-h-[260px] flex-col p-[clamp(20px,2.4vw,28px)] text-ap-panel-ink"
                 data-ui
                 {...reveal(0, 0.2)}
               >
@@ -534,7 +532,7 @@ function Landing() {
               </Motion.div>
 
               <Motion.div
-                className="flex min-h-[260px] flex-col clay-panel p-[clamp(20px,2.4vw,28px)] text-ap-panel-ink"
+                className="clay-panel clay-panel-dark flex min-h-[260px] flex-col p-[clamp(20px,2.4vw,28px)] text-ap-panel-ink"
                 data-ui
                 {...reveal(0.08, 0.2)}
               >
@@ -560,7 +558,7 @@ function Landing() {
               </Motion.div>
 
               <Motion.div
-                className="col-span-full grid min-h-[210px] items-center gap-[clamp(24px,4vw,48px)] clay-panel p-[clamp(20px,2.4vw,28px)] text-ap-panel-ink min-[980px]:grid-cols-[auto_minmax(0,1fr)_220px] max-[980px]:grid-cols-[auto_minmax(0,1fr)] max-[760px]:grid-cols-1 max-[760px]:gap-6"
+                className="clay-panel clay-panel-dark col-span-full grid min-h-[210px] items-center gap-[clamp(24px,4vw,48px)] p-[clamp(20px,2.4vw,28px)] text-ap-panel-ink min-[980px]:grid-cols-[auto_minmax(0,1fr)_220px] max-[980px]:grid-cols-[auto_minmax(0,1fr)] max-[760px]:grid-cols-1 max-[760px]:gap-6"
                 data-ui
                 {...reveal(0.12, 0.2)}
               >
@@ -601,15 +599,12 @@ function Landing() {
           </div>
         </section>
 
-        <section id="how" className="scroll-mt-[90px] bg-ap-accent text-ap-accent-ink">
-          <div className="flex h-3.5" aria-hidden="true">
-            {Array.from({ length: 24 }).map((_, i) => (
-              <span key={i} className="flex-1 bg-ap-accent-ink even:bg-ap-accent" />
-            ))}
-          </div>
-
+        <section
+          id="how"
+          className="scroll-mt-[90px] bg-ap-accent text-ap-accent-ink"
+        >
           <div className={`${CONTAINER} py-[clamp(72px,10vh,120px)]`}>
-            <div className="mb-[clamp(44px,6vw,72px)] flex items-end justify-between gap-12 max-[980px]:grid max-[980px]:gap-6">
+            <div className="mb-[clamp(40px,5.5vw,64px)] flex items-end justify-between gap-12 max-[980px]:grid max-[980px]:gap-6">
               <Motion.h2
                 className="m-0 max-w-[15ch] text-ap-head font-bold leading-[0.96] tracking-[-0.04em] text-ap-accent-ink"
                 {...reveal()}
@@ -617,7 +612,7 @@ function Landing() {
                 From motion to verdict.
               </Motion.h2>
               <Motion.p
-                className="m-0 mb-1.5 max-w-[38ch] text-ap-lead leading-[1.55] text-ap-accent-ink/70"
+                className="m-0 mb-1.5 max-w-[38ch] text-ap-lead leading-[1.55] text-ap-accent-ink"
                 {...reveal(0.08)}
               >
                 No setup, no account, no ceremony. Name the motion, argue the
@@ -625,23 +620,28 @@ function Landing() {
               </Motion.p>
             </div>
 
-            <div className="grid gap-[clamp(32px,4.5vw,64px)] min-[760px]:grid-cols-3 max-[760px]:grid-cols-1 max-[760px]:gap-9">
+            <ol className="m-0 grid list-none border-t border-ap-accent-ink/25 p-0 min-[760px]:grid-cols-3 max-[760px]:grid-cols-1">
               {STEPS.map((step, i) => (
-                <Motion.div
+                <Motion.li
                   key={step.title}
-                  className="clay clay-interactive bg-white p-6 max-[760px]:p-5"
+                  className="border-ap-accent-ink/15 pt-8 max-[760px]:border-b max-[760px]:pb-8 max-[760px]:last:border-b-0 min-[760px]:border-l min-[760px]:pb-1 min-[760px]:pl-[clamp(24px,3vw,44px)] min-[760px]:pr-[clamp(24px,3vw,44px)] min-[760px]:first:border-l-0 min-[760px]:first:pl-0 min-[760px]:last:pr-0"
                   {...reveal(i * 0.08, 0.35)}
                 >
-                  <div className="mb-5 h-2.5 w-2.5 bg-ap-accent-ink max-[760px]:mb-3.5" aria-hidden="true" />
-                  <h3 className="mb-2.5 mt-0 text-ap-lead font-semibold leading-tight tracking-[-0.015em] text-ap-accent-ink">
+                  <span
+                    className="block select-none text-[clamp(2.4rem,3.6vw,3.4rem)] font-bold leading-none tracking-[-0.04em] text-ap-accent-ink/35 tabular-nums"
+                    aria-hidden="true"
+                  >
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <h3 className="mb-2 mt-6 text-ap-lead font-semibold leading-tight tracking-[-0.015em] text-ap-accent-ink">
                     {step.title}
                   </h3>
-                  <p className="m-0 text-ap-body leading-[1.55] text-ap-accent-ink/70">
+                  <p className="m-0 max-w-[32ch] text-ap-body leading-[1.55] text-ap-accent-ink">
                     {step.text}
                   </p>
-                </Motion.div>
+                </Motion.li>
               ))}
-            </div>
+            </ol>
           </div>
         </section>
 
@@ -678,7 +678,7 @@ function Landing() {
         </section>
       </main>
 
-      <footer className="overflow-hidden bg-ap-panel text-ap-panel-ink">
+      <footer className="clay-panel-dark overflow-hidden bg-ap-panel text-ap-panel-ink">
         <div className={`${CONTAINER} pb-7 pt-[clamp(48px,7vw,80px)]`}>
           <div className="flex items-start justify-between gap-12 pb-[clamp(48px,7vw,72px)] max-[760px]:flex-col max-[760px]:gap-7">
             <div className="flex flex-wrap gap-x-7 gap-y-2.5">

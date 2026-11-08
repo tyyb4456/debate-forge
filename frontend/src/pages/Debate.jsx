@@ -20,7 +20,6 @@ import {
   ArrowUp,
 } from 'lucide-react';
 import PreviousDebatesSidebar from '../components/PreviousDebatesSidebar';
-import ThemeToggle from '../components/ThemeToggle';
 
 const BTN =
   'clay-btn clay-btn-accent inline-flex items-center justify-center gap-2 px-5 font-semibold leading-none text-ap-accent-ink hover:bg-ap-accent/85 disabled:cursor-not-allowed disabled:opacity-50';
@@ -692,7 +691,6 @@ function Debate() {
           </div>
 
           <div className="flex shrink-0 items-center gap-2 max-[700px]:ml-0.5">
-            <ThemeToggle />
             <button
               type="button"
               className="clay-icon inline-flex h-10 w-10 shrink-0 items-center justify-center text-ap-ink"
